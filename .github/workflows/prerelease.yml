@@ -36,11 +36,12 @@ jobs:
       - name: Add proxy providers
         run: |
           cd ..
+          git clone -b dev-next https://github.com/qjebbs/sing-box sing-box
           git clone https://github.com/qjebbs/sing-box sing-box.bak
           cd sing-box.bak
           COMMIT=$(git log --pretty=format:"%h-%s"|grep provider|awk -F "-" '{print $1}')
           cd ../sing-box
-          git checkout dev
+          git checkout dev-next
           git remote add qjebbs https://github.com/qjebbs/sing-box
           git fetch qjebbs
           git cherry-pick $COMMIT || true
@@ -80,23 +81,6 @@ jobs:
           #make
           #make install
           #cd ..
-          
-      - name: Cache go module
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/go/pkg/mod
-          key: go-${{ hashFiles('**/go.sum') }}
-      
-      - name: Add cache to Go proxy
-        run: |
-          version=`git rev-parse HEAD`
-          mkdir build
-          pushd build
-          go mod init build
-          go get -v github.com/sagernet/sing-box@$version
-          popd
-        continue-on-error: true
       
       - name: Test
         if: ${{ github.ref_name=='debug' && matrix.job.id=='1' && matrix.job.type=='WithoutCGO' }}
@@ -108,7 +92,7 @@ jobs:
         env:
           TAGS: with_gvisor
         run: |
-          mkdir dist
+          mkdir sing-box/dist
           TAGS=${TAGS} 
           make -j$(($(nproc) + 1)) ${{ matrix.job.target }}
 
@@ -130,9 +114,9 @@ jobs:
           CC: ${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android33-clang
           GOARCH: arm64
           GOOS: android
-          DIST: dist
+          DIST: sing-box/dist
           NAME: sing-box-android-arm64
-          MAIN: ./cmd/sing-box
+          MAIN: ./sing-box/cmd/sing-box
         run: |
           mkdir dist
           TAGS=${TAGS}
@@ -154,9 +138,9 @@ jobs:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
           TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_shadowsocksr,with_acme,with_clash_api,with_v2ray_api,with_lwip
           LDFLAGS: -s -w -buildid=
-          DIST: dist
+          DIST: sing-box/dist
           NAME: sing-box
-          MAIN: cmd/sing-box
+          MAIN: sing-box/cmd/sing-box
         run: |
           mkdir dist
           #go mod tidy -v
@@ -170,31 +154,31 @@ jobs:
       - name: Rename
         if: ${{ matrix.job.type=='WithCGO' }}
         run: |
-          cd dist
+          cd sing-box/dist
           ls -la
-          cp ../.github/rename-cgo.sh ./
+          cp ../../.github/rename-cgo.sh ./
           bash ./rename-cgo.sh
           rm ./rename-cgo.sh
           ls -la
-          cd ..
+          cd ../..
       
       - name: Zip
         if: ${{  success() }}
         run: |
-          cd dist
+          cd sing-box/dist
           ls -la
           chmod +x *
-          cp ../.github/release.sh ./
+          cp ../../.github/release.sh ./
           bash ./release.sh
           rm ./release.sh
           ls -la
-          cd ..
+          cd ../..
       
       - uses: actions/upload-artifact@v3
         if: ${{  success() }}
         with:
           name: artifact
-          path: dist/
+          path: sing-box/dist/
 
   Build2:
     permissions: write-all
@@ -248,7 +232,7 @@ jobs:
         env:
           TAGS: with_gvisor
         run: |
-          mkdir dist
+          mkdir sing-box/dist
           TAGS=${TAGS} 
           make -j$(($(nproc) + 1)) ${{ matrix.job.target }}
 
@@ -271,11 +255,11 @@ jobs:
           GOARCH: arm
           GOOS: android
           GOARM: 7
-          DIST: dist
+          DIST: sing-box/dist
           NAME: sing-box-android-arm-7
-          MAIN: ./cmd/sing-box
+          MAIN: ./sing-box/cmd/sing-box
         run: |
-          mkdir dist
+          mkdir sing-box/dist
           TAGS=${TAGS}
           LDFLAGS=${LDFLAGS}
           DIST=${DIST}
@@ -295,11 +279,11 @@ jobs:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
           TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_shadowsocksr,with_acme,with_clash_api,with_v2ray_api,with_lwip
           LDFLAGS: -s -w -buildid=
-          DIST: dist
+          DIST: sing-box/dist
           NAME: sing-box
-          MAIN: cmd/sing-box
+          MAIN: sing-box/cmd/sing-box
         run: |
-          mkdir dist
+          mkdir sing-box/dist
           #go mod tidy -v
           TAGS=${TAGS}
           LDFLAGS=${LDFLAGS}
@@ -311,31 +295,31 @@ jobs:
       - name: Rename
         if: ${{ matrix.job.type=='WithCGO' }}
         run: |
-          cd dist
+          cd sing-box/dist
           ls -la
-          cp ../.github/rename-cgo.sh ./
+          cp ../../.github/rename-cgo.sh ./
           bash ./rename-cgo.sh
           rm ./rename-cgo.sh
           ls -la
-          cd ..
+          cd ../..
       
       - name: Zip
         if: ${{  success() }}
         run: |
-          cd dist
+          cd sing-box/dist
           ls -la
           chmod +x *
-          cp ../.github/release.sh ./
+          cp ../../.github/release.sh ./
           bash ./release.sh
           rm ./release.sh
           ls -la
-          cd ..
+          cd ../..
       
       - uses: actions/upload-artifact@v3
         if: ${{  success() }}
         with:
           name: artifact
-          path: dist/
+          path: sing-box/dist/
 
   Build3:
     permissions: write-all
@@ -389,7 +373,7 @@ jobs:
         env:
           TAGS: with_gvisor
         run: |
-          mkdir dist
+          mkdir sing-box/dist
           TAGS=${TAGS} 
           make -j$(($(nproc) + 1)) ${{ matrix.job.target }}
       
@@ -412,9 +396,9 @@ jobs:
           GOARCH: arm
           GOOS: android
           GOARM: 7
-          DIST: dist
+          DIST: sing-box/dist
           NAME: sing-box-android-arm-7
-          MAIN: ./cmd/sing-box
+          MAIN: ./sing-box/cmd/sing-box
         run: |
           mkdir dist
           TAGS=${TAGS}
@@ -436,9 +420,9 @@ jobs:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
           TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_shadowsocksr,with_acme,with_clash_api,with_v2ray_api,with_lwip
           LDFLAGS: -s -w -buildid=
-          DIST: dist
+          DIST: sing-box/dist
           NAME: sing-box
-          MAIN: cmd/sing-box
+          MAIN: sing-box/cmd/sing-box
         run: |
           mkdir dist
           #go mod tidy -v
@@ -459,11 +443,11 @@ jobs:
           GOARCH: amd64
           GOOS: windows
           GOAMD64: v3
-          DIST: dist
+          DIST: sing-box/dist
           NAME: sing-box-windows-amd64-gui
-          MAIN: ./cmd/sing-box
+          MAIN: ./sing-box/cmd/sing-box
         run: |
-          mkdir dist
+          mkdir sing-box/dist
           TAGS=${TAGS}
           LDFLAGS=${LDFLAGS}
           DIST=${DIST}
@@ -474,31 +458,31 @@ jobs:
       - name: Rename
         if: ${{ matrix.job.type=='WithCGO' }}
         run: |
-          cd dist
+          cd sing-box/dist
           ls -la
-          cp ../.github/rename-cgo.sh ./
+          cp ../../.github/rename-cgo.sh ./
           bash ./rename-cgo.sh
           rm ./rename-cgo.sh
           ls -la
-          cd ..
+          cd ../..
       
       - name: Zip
         if: ${{  success() }}
         run: |
-          cd dist
+          cd sing-box/dist
           ls -la
           chmod +x *
-          cp ../.github/release.sh ./
+          cp ../../.github/release.sh ./
           bash ./release.sh
           rm ./release.sh
           ls -la
-          cd ..
+          cd ../..
       
       - uses: actions/upload-artifact@v3
         if: ${{  success() }}
         with:
           name: artifact
-          path: dist/
+          path: sing-box/dist/
 
   Upload:
     permissions: write-all
@@ -508,7 +492,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: artifact
-          path: dist/
+          path: sing-box/dist/
 
       - name: Display structure of downloaded files
         run: ls -R
@@ -534,6 +518,6 @@ jobs:
         with:
           tag: ${{ github.ref_name }}
           tag_name: dev-next-${{ github.ref_name }}
-          files: dist/*
+          files: sing-box/dist/*
           prerelease: true
           generate_release_notes: true
