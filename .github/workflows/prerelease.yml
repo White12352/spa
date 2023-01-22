@@ -27,11 +27,13 @@ jobs:
           - { type: "WithCGO", target: "android-arm64", id: "8" }
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          repository: SagerNet/sing-box
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v3
+      
+      - name: Initialization environment
+        run: |
+          sudo apt -y update
+          sudo apt -y install curl git build-essential libssl-dev libevent-dev zlib1g-dev
       
       - name: Add proxy providers
         run: |
@@ -49,11 +51,6 @@ jobs:
           #sed -i "s/outbound := range r.outbounds/outbound := range r.outbounds.All()/g" route/router.go
           sed -i "s/v.TLSAllowInsecure/true/g" common/link/vmess.go
           cd ..
-
-      - name: Initialization environment
-        run: |
-          sudo apt -y update
-          sudo apt -y install curl git build-essential libssl-dev libevent-dev zlib1g-dev
       
       - name: Set ENV
         run: |
@@ -163,7 +160,9 @@ jobs:
           cd sing-box
           cd dist
           ls -la
-          cd ../..
+          cd ../../.github
+          ls
+          cd ..         
           cp .github/rename-cgo.sh ./
           bash ./rename-cgo.sh
           rm ./rename-cgo.sh
