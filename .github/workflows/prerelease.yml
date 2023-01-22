@@ -90,6 +90,7 @@ jobs:
           GOOS: ${{ matrix.job.goos }}
           GOARCH: ${{ matrix.job.goarch }}
           GOAMD64: ${{ matrix.job.goamd64 }}
+          DIST: dist
           NAME: sing-box-${{ matrix.job.name }}
           MAIN: ./cmd/sing-box
         run: |
