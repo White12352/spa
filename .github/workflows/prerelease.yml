@@ -95,7 +95,7 @@ jobs:
           mkdir dist
           TAGS=${TAGS}
           DIST=dist
-          NAME=$(NAME)
+          #NAME=$(NAME)
           GOBIN=/home/runner/work/spa/spa/sing-box
           go env -w GOBIN=${GOBIN}
           go env -w CGO_ENABLED=${CGO_ENABLED}
@@ -103,7 +103,7 @@ jobs:
           go env -w GOARCH=${GOARCH}
           go env -w GOAMD64=${GOAMD64}
           go env
-          make -j$(($(nproc) + 1)) -o $(DIST)/$(NAME)
+          make -j$(($(nproc) + 1)) -o $(DIST)/windows-64
           cd ..
 
       - uses: nttld/setup-ndk@v1
