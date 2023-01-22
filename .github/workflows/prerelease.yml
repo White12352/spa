@@ -93,6 +93,7 @@ jobs:
           cd sing-box
           mkdir dist
           TAGS=${TAGS}
+          go env -w GOBIN=dist
           go env -w CGO_ENABLED=${CGO_ENABLED}
           go env -w GOOS=${GOOS}
           go env -w GOARCH=${GOARCH}
