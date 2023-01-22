@@ -103,7 +103,7 @@ jobs:
           go env -w GOARCH=${GOARCH}
           go env -w GOAMD64=${GOAMD64}
           go env
-          ${make -j$(($(nproc) + 1))} -o ${DIST}/windows-64
+          {make -j$(($(nproc) + 1)) -o ${DIST}/windows-64
           cd ..
 
       - uses: nttld/setup-ndk@v1
