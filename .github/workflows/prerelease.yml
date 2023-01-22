@@ -93,7 +93,8 @@ jobs:
         env:
           TAGS: with_gvisor
         run: |
-          mkdir sing-box/dist
+          cd sing-box
+          mkdir dist
           TAGS=${TAGS} 
           make -j$(($(nproc) + 1)) ${{ matrix.job.target }}
 
