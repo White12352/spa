@@ -35,7 +35,6 @@ jobs:
       
       - name: Add proxy providers
         run: |
-          cd ../..
           git clone -b dev-next https://github.com/qjebbs/sing-box sing-box
           git clone https://github.com/qjebbs/sing-box sing-box.bak
           cd sing-box.bak
@@ -93,8 +92,7 @@ jobs:
         env:
           TAGS: with_gvisor
         run: |
-          cd sing-box
-          mkdir dist
+          mkdir sing-box/dist
           TAGS=${TAGS} 
           make -j$(($(nproc) + 1)) ${{ matrix.job.target }}
 
