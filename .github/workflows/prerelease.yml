@@ -86,6 +86,7 @@ jobs:
         env:
           TAGS: with_gvisor
           CGO_ENABLED: 0
+          NAME: ${{ matrix.job.name }}
           GOOS: ${{ matrix.job.goos }}
           GOARCH: ${{ matrix.job.goarch }}
           GOAMD64: ${{ matrix.job.goamd64 }}
@@ -93,6 +94,8 @@ jobs:
           cd sing-box
           mkdir dist
           TAGS=${TAGS}
+          DIST=dist
+          NAME=$(NAME)
           GOBIN=/home/runner/work/spa/spa/sing-box
           go env -w GOBIN=${GOBIN}
           go env -w CGO_ENABLED=${CGO_ENABLED}
@@ -100,7 +103,7 @@ jobs:
           go env -w GOARCH=${GOARCH}
           go env -w GOAMD64=${GOAMD64}
           go env
-          make -j$(($(nproc) + 1)) ${{ matrix.job.target }}
+          make -j$(($(nproc) + 1)) -o $(DIST)/$(NAME)
           cd ..
 
       - uses: nttld/setup-ndk@v1
