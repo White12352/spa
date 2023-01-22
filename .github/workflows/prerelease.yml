@@ -154,7 +154,7 @@ jobs:
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
-          xgo -v --branch ${{ github.ref_name }} --targets="${{ matrix.job.target }}" --tags="${TAGS}" -ldflags="${LDFLAGS}" --out ${DIST}/${NAME} github.com/${{ github.repository }}/${MAIN}
+          xgo -v --targets="${{ matrix.job.target }}" --tags="${TAGS}" -ldflags="${LDFLAGS}" --out ${DIST}/${NAME} ${MAIN}
           cd ..
 
       - name: Rename
@@ -162,7 +162,7 @@ jobs:
         run: |
           cd sing-box/dist
           ls -la
-          cp ../.github/rename-cgo.sh ./
+          cp .github/rename-cgo.sh ./
           bash ./rename-cgo.sh
           rm ./rename-cgo.sh
           ls -la
@@ -174,7 +174,7 @@ jobs:
           cd sing-box/dist
           ls -la
           chmod +x *
-          cp ./.github/release.sh ./
+          cp .github/release.sh ./
           bash ./release.sh
           rm ./release.sh
           ls -la
