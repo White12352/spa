@@ -87,10 +87,11 @@ jobs:
           TAGS: with_gvisor
           LDFLAGS: -s -w -buildid=
           CGO_ENABLED: 0
-          NAME: ${{ matrix.job.name }}
           GOOS: ${{ matrix.job.goos }}
           GOARCH: ${{ matrix.job.goarch }}
           GOAMD64: ${{ matrix.job.goamd64 }}
+          NAME: sing-box-${{ matrix.job.name }}
+          MAIN: ./cmd/sing-box
         run: |
           cd sing-box
           mkdir dist
