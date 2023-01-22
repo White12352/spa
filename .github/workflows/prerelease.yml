@@ -93,7 +93,7 @@ jobs:
           cd sing-box
           mkdir dist
           TAGS=${TAGS}
-          GOBIN=$GITHUB_ACTION_PATH/sing-box/dist
+          GOBIN=/home/runner/work/spa/spa/sing-box/dist
           go env -w GOBIN=${GOBIN}
           go env -w CGO_ENABLED=${CGO_ENABLED}
           go env -w GOOS=${GOOS}
