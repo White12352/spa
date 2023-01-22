@@ -157,23 +157,18 @@ jobs:
       - name: Rename
         if: ${{ matrix.job.type=='WithCGO' }}
         run: |
-          cd sing-box
-          cd dist
-          ls -la
-          cd ../../.github
-          ls
-          cd ..         
-          cp .github/rename-cgo.sh ./
+          cd sing-box/dist
+          ls -la        
+          cp ../../.github/rename-cgo.sh ./
           bash ./rename-cgo.sh
           rm ./rename-cgo.sh
           ls -la
-          #cd ../..
+          cd ../..
       
       - name: Zip
         if: ${{  success() }}
         run: |
-          cd sing-box
-          cd dist
+          cd sing-box/dist
           ls -la
           chmod +x *
           cp ../../.github/release.sh ./
@@ -205,6 +200,23 @@ jobs:
         run: |
           sudo apt -y update
           sudo apt -y install curl git build-essential libssl-dev libevent-dev zlib1g-dev
+      
+      - name: Add proxy providers
+        run: |
+          git clone -b dev-next https://github.com/qjebbs/sing-box sing-box
+          git clone https://github.com/qjebbs/sing-box sing-box.bak
+          cd sing-box.bak
+          COMMIT=$(git log --pretty=format:"%h-%s"|grep provider|awk -F "-" '{print $1}')
+          cd ../sing-box
+          git checkout dev-next
+          git remote add qjebbs https://github.com/qjebbs/sing-box
+          git fetch qjebbs
+          git cherry-pick $COMMIT || true
+          #git add mkdocs.yml
+          #git -c core.editor=true cherry-pick --continue
+          #sed -i "s/outbound := range r.outbounds/outbound := range r.outbounds.All()/g" route/router.go
+          sed -i "s/v.TLSAllowInsecure/true/g" common/link/vmess.go
+          cd ..
       
       - name: Set ENV
         run: |
@@ -311,7 +323,7 @@ jobs:
         run: |
           cd sing-box/dist
           ls -la
-          cp ../.github/rename-cgo.sh ./
+          cp ../../.github/rename-cgo.sh ./
           bash ./rename-cgo.sh
           rm ./rename-cgo.sh
           ls -la
@@ -323,7 +335,7 @@ jobs:
           cd sing-box/dist
           ls -la
           chmod +x *
-          cp ../.github/release.sh ./
+          cp ../../.github/release.sh ./
           bash ./release.sh
           rm ./release.sh
           ls -la
@@ -352,6 +364,23 @@ jobs:
         run: |
           sudo apt -y update
           sudo apt -y install curl git build-essential libssl-dev libevent-dev zlib1g-dev gcc-mingw-w64
+      
+      - name: Add proxy providers
+        run: |
+          git clone -b dev-next https://github.com/qjebbs/sing-box sing-box
+          git clone https://github.com/qjebbs/sing-box sing-box.bak
+          cd sing-box.bak
+          COMMIT=$(git log --pretty=format:"%h-%s"|grep provider|awk -F "-" '{print $1}')
+          cd ../sing-box
+          git checkout dev-next
+          git remote add qjebbs https://github.com/qjebbs/sing-box
+          git fetch qjebbs
+          git cherry-pick $COMMIT || true
+          #git add mkdocs.yml
+          #git -c core.editor=true cherry-pick --continue
+          #sed -i "s/outbound := range r.outbounds/outbound := range r.outbounds.All()/g" route/router.go
+          sed -i "s/v.TLSAllowInsecure/true/g" common/link/vmess.go
+          cd ..
       
       - name: Set ENV
         run: |
@@ -482,7 +511,7 @@ jobs:
         run: |
           cd sing-box/dist
           ls -la
-          cp ../.github/rename-cgo.sh ./
+          cp ../../.github/rename-cgo.sh ./
           bash ./rename-cgo.sh
           rm ./rename-cgo.sh
           ls -la
@@ -494,7 +523,7 @@ jobs:
           cd sing-box/dist
           ls -la
           chmod +x *
-          cp ../.github/release.sh ./
+          cp ../../.github/release.sh ./
           bash ./release.sh
           rm ./release.sh
           ls -la
