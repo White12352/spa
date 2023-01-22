@@ -547,7 +547,7 @@ jobs:
 
       - name: Display structure of downloaded files
         run: ls -R
-        working-directory: dist
+        working-directory: sing-box/dist
 
       - name: Delete current release assets
         uses: andreaswilli/delete-release-assets-action@v2.0.0
