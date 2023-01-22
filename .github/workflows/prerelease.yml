@@ -144,7 +144,7 @@ jobs:
           LDFLAGS: -s -w -buildid=
           DIST: dist
           NAME: sing-box
-          MAIN: ./sing-box/cmd/sing-box
+          MAIN: ./cmd/sing-box
         run: |
           cd sing-box
           mkdir dist
