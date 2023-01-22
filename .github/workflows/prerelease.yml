@@ -144,7 +144,7 @@ jobs:
           LDFLAGS: -s -w -buildid=
           DIST: dist
           NAME: sing-box
-          MAIN: sing-box/cmd/sing-box
+          MAIN: ./sing-box/cmd/sing-box
         run: |
           cd sing-box
           mkdir dist
@@ -175,12 +175,11 @@ jobs:
           cd sing-box/dist
           ls -la
           chmod +x *
-          cd ../..
-          cp .github/release.sh ./
+          cp ../../.github/release.sh ./
           bash ./release.sh
           rm ./release.sh
           ls -la
-          #cd ../..
+          cd ../..
       
       - uses: actions/upload-artifact@v3
         if: ${{  success() }}
