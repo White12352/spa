@@ -93,10 +93,10 @@ jobs:
           cd sing-box
           mkdir dist
           TAGS=${TAGS}
-          export CGO_ENABLED="${CGO_ENABLED}"
-          export GOOS="${GOOS}"
-          export GOARCH="${GOARCH}"
-          export GOAMD64="${GOAMD64}"
+          export CGO_ENABLED=${CGO_ENABLED}
+          export GOOS=${GOOS}
+          export GOARCH=${GOARCH}
+          export GOAMD64=${GOAMD64}
           go env
           make -j$(($(nproc) + 1)) ${{ matrix.job.target }}
           cd ..
