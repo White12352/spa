@@ -35,7 +35,7 @@ jobs:
       
       - name: Add proxy providers
         run: |
-          cd ..
+          cd ../..
           git clone -b dev-next https://github.com/qjebbs/sing-box sing-box
           git clone https://github.com/qjebbs/sing-box sing-box.bak
           cd sing-box.bak
