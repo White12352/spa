@@ -90,6 +90,7 @@ jobs:
           GOOS: ${{ matrix.job.goos }}
           GOARCH: ${{ matrix.job.goarch }}
           GOAMD64: ${{ matrix.job.goamd64 }}
+          GOARM: ${{ matrix.job.goarm }}
           DIST: dist
           NAME: sing-box-${{ matrix.job.name }}
           MAIN: ./cmd/sing-box
@@ -101,7 +102,7 @@ jobs:
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
-          GO_ENABLED=${CGO_ENABLED} GOOS=${GOOS} GOARCH=${GOARCH} GOAMD64=${GOAMD64} go build -v -trimpath -tags ${TAGS} -ldflags "${LDFLAGS}" -o ${DIST}/${NAME} ${MAIN}
+          GO_ENABLED=${CGO_ENABLED} GOOS=${GOOS} GOARCH=${GOARCH} GOAMD64=${GOAMD64} GOAMRM=${GOARM} go build -v -trimpath -tags ${TAGS} -ldflags "${LDFLAGS}" -o ${DIST}/${NAME} ${MAIN}
           cd ..
 
       - uses: nttld/setup-ndk@v1
