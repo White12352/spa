@@ -35,8 +35,6 @@ jobs:
       
       - name: Add proxy providers
         run: |
-          #git config --global user.email "yangchuansheng33@gmail.com"
-          #git config --global user.name "yangchuansheng"
           cd ..
           git clone https://github.com/qjebbs/sing-box sing-box.bak
           cd sing-box.bak
