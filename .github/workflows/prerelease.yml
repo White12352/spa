@@ -84,7 +84,7 @@ jobs:
       - name: Build WithoutCGO
         if: ${{ matrix.job.type=='WithoutCGO' }}
         env:
-          GITHUB_ACTION_PATH: ${{ github.action_path }}
+          GITHUB_ACTION_PATH: ${{ github.action_path }}/sing-box/dist
           TAGS: with_gvisor
           CGO_ENABLED: 0
           GOOS: ${{ matrix.job.goos }}
@@ -94,7 +94,7 @@ jobs:
           cd sing-box
           mkdir dist
           TAGS=${TAGS}
-          go env -w GOBIN=${GITHUB_ACTION_PATH}/sing-box/dist
+          go env -w GOBIN=${GITHUB_ACTION_PATH}
           go env -w CGO_ENABLED=${CGO_ENABLED}
           go env -w GOOS=${GOOS}
           go env -w GOARCH=${GOARCH}
