@@ -49,6 +49,7 @@ jobs:
           #git -c core.editor=true cherry-pick --continue
           #sed -i "s/outbound := range r.outbounds/outbound := range r.outbounds.All()/g" route/router.go
           sed -i "s/v.TLSAllowInsecure/true/g" common/link/vmess.go
+          cd ..
 
       - name: Initialization environment
         run: |
