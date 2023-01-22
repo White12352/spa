@@ -160,19 +160,21 @@ jobs:
       - name: Rename
         if: ${{ matrix.job.type=='WithCGO' }}
         run: |
-          cd sing-box/dist
+          cd sing-box
+          cd dist
           ls -la
           cd ../..
           cp .github/rename-cgo.sh ./
           bash ./rename-cgo.sh
           rm ./rename-cgo.sh
           ls -la
-          cd ../..
+          #cd ../..
       
       - name: Zip
         if: ${{  success() }}
         run: |
-          cd sing-box/dist
+          cd sing-box
+          cd dist
           ls -la
           chmod +x *
           cp ../../.github/release.sh ./
