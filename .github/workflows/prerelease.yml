@@ -95,17 +95,13 @@ jobs:
           go test -v ./...
 
       - name: Build WithoutCGO
-        if: ${{ matrix.job.type=t!='WithoutCGO' }}
+        if: ${{ matrix.job.type=='WithoutCGO' }}
         env:
           TAGS: with_gvisor
         run: |
           cd sing-box
           mkdir dist
           TAGS=${TAGS}
-          CGO_ENABLED=${CGO_ENABLED}
-          GOOS=${GOOS}
-          GOARCH=${GOARCH}
-          GOAMD64=${GOAMD64}
           make -j$(($(nproc) + 1)) ${{ matrix.job.target }}
           cd ..
 
