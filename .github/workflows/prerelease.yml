@@ -60,7 +60,20 @@ jobs:
         run: |
           echo ::set-output name=go_version::$(curl -s https://raw.githubusercontent.com/actions/go-versions/main/versions-manifest.json | grep -oE '"version": "[0-9]{1}.[0-9]{1,}(.[0-9]{1,})?"' | head -1 | cut -d':' -f2 | sed 's/ //g; s/"//g')
       
-      - name: Setup Go
+      - name: Setup Go WithoutCGO
+        if: ${{ matrix.job.type=='WithoutCGO' }}
+        uses: actions/setup-go@v3
+        env:
+          CGO_ENABLED: 0
+          GOOS: ${{ matrix.job.goos }}
+          GOARCH: ${{ matrix.job.goarch }}
+          GOAMD64: ${{ matrix.job.goamd64 }}
+        with:
+          go-version: ${{ steps.version.outputs.go_version }}
+          check-latest: true
+      
+      - name: Setup Go WitCGO
+        if: ${{ matrix.job.type!='WithoutCGO' }}
         uses: actions/setup-go@v3
         with:
           go-version: ${{ steps.version.outputs.go_version }}
@@ -82,13 +95,9 @@ jobs:
           go test -v ./...
 
       - name: Build WithoutCGO
-        if: ${{ matrix.job.type=='WithoutCGO' }}
+        if: ${{ matrix.job.type=t!='WithoutCGO' }}
         env:
           TAGS: with_gvisor
-          CGO_ENABLED: 0
-          GOOS: ${{ matrix.job.goos }}
-          GOARCH: ${{ matrix.job.goarch }}
-          GOAMD64: ${{ matrix.job.goamd64 }}
         run: |
           cd sing-box
           mkdir dist
