@@ -85,6 +85,7 @@ jobs:
         if: ${{ matrix.job.type=='WithoutCGO' }}
         env:
           TAGS: with_gvisor
+          LDFLAGS: -s -w -buildid=
           CGO_ENABLED: 0
           NAME: ${{ matrix.job.name }}
           GOOS: ${{ matrix.job.goos }}
@@ -94,16 +95,11 @@ jobs:
           cd sing-box
           mkdir dist
           TAGS=${TAGS}
-          DIST=dist
+          LDFLAGS=${LDFLAGS}
+          DIST=${DIST}
           NAME=${NAME}
-          GOBIN=/home/runner/work/spa/spa/sing-box
-          go env -w GOBIN=${GOBIN}
-          go env -w CGO_ENABLED=${CGO_ENABLED}
-          go env -w GOOS=${GOOS}
-          go env -w GOARCH=${GOARCH}
-          go env -w GOAMD64=${GOAMD64}
-          go env
-          make -j$(($(nproc) + 1)) build=go build $(PARAMS) -o ${DIST}/${NAME} $(MAIN)
+          MAIN=${MAIN}
+          GO_ENABLED=${CGO_ENABLED} GOOS=${GOOS} GOARCH=${GOARCH} GOAMD64=${GOAMD64} go build -v -trimpath -tags ${TAGS} -ldflags "${LDFLAGS}" -o ${DIST}/${NAME} ${MAIN}
           cd ..
 
       - uses: nttld/setup-ndk@v1
