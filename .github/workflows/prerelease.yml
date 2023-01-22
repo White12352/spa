@@ -162,6 +162,7 @@ jobs:
         run: |
           cd sing-box/dist
           ls -la
+          cd ../..
           cp .github/rename-cgo.sh ./
           bash ./rename-cgo.sh
           rm ./rename-cgo.sh
@@ -174,6 +175,7 @@ jobs:
           cd sing-box/dist
           ls -la
           chmod +x *
+          cd ../..
           cp .github/release.sh ./
           bash ./release.sh
           rm ./release.sh
