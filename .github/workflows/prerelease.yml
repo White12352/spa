@@ -174,11 +174,11 @@ jobs:
           cd sing-box/dist
           ls -la
           chmod +x *
-          cp ../.github/release.sh ./
+          cp ./.github/release.sh ./
           bash ./release.sh
           rm ./release.sh
           ls -la
-          cd ../..
+          #cd ../..
       
       - uses: actions/upload-artifact@v3
         if: ${{  success() }}
