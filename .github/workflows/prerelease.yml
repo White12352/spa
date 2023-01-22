@@ -97,6 +97,7 @@ jobs:
           export GOOS="${GOOS}"
           export GOARCH="${GOARCH}"
           export GOAMD64="${GOAMD64}"
+          go env
           make -j$(($(nproc) + 1)) ${{ matrix.job.target }}
           cd ..
 
