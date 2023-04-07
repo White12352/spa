@@ -592,7 +592,7 @@ jobs:
         if: ${{  success() }}
         with:
           tag: ${{ github.ref_name }}
-          tag_name: dev-next-${{ github.ref_name }}
+          tag_name: dev-next2-${{ github.ref_name }}
           files: sing-box/dist/*
           prerelease: true
           generate_release_notes: true
