@@ -213,19 +213,24 @@ jobs:
       
       - name: Add proxy providers
         run: |
-          git clone -b dev-next https://github.com/qjebbs/sing-box sing-box
-          git clone https://github.com/qjebbs/sing-box sing-box.bak
-          cd sing-box.bak
-          COMMIT=$(git log --pretty=format:"%h-%s"|grep provider|awk -F "-" '{print $1}')
-          cd ../sing-box
-          git checkout dev-next
-          git remote add qjebbs https://github.com/qjebbs/sing-box
-          git fetch qjebbs
-          git cherry-pick $COMMIT || true
-          #git add mkdocs.yml
-          #git -c core.editor=true cherry-pick --continue
-          #sed -i "s/outbound := range r.outbounds/outbound := range r.outbounds.All()/g" route/router.go
-          sed -i "s/v.TLSAllowInsecure/true/g" common/link/vmess.go
+          #git clone -b dev-next https://github.com/qjebbs/sing-box sing-box
+          #git clone https://github.com/qjebbs/sing-box sing-box.bak
+          #cd sing-box.bak
+          #COMMIT=$(git log --pretty=format:"%h-%s"|grep provider|awk -F "-" '{print $1}')
+          #cd ../sing-box
+          #git checkout dev-next
+          #git remote add qjebbs https://github.com/qjebbs/sing-box
+          #git fetch qjebbs
+          #git cherry-pick $COMMIT || true
+          ##git add mkdocs.yml
+          ##git -c core.editor=true cherry-pick --continue
+          ##sed -i "s/outbound := range r.outbounds/outbound := range r.outbounds.All()/g" route/router.go
+          #sed -i "s/v.TLSAllowInsecure/true/g" common/link/vmess.go
+          git clone -b dev-next https://github.com/SagerNet/sing-box sing-box
+          cd sing-box
+          git checkout -b cherry-pick_provider
+          git remote add qjebbs https://github.com/qjebbs/sing-box && git fetch --depth=3 qjebbs
+          git cherry-pick -x -n $(git log qjebbs/dev-next --grep=provider --format=format:"%H")
           cd ..
       
       - name: Set ENV
