@@ -222,9 +222,6 @@ jobs:
           git remote add qjebbs https://github.com/qjebbs/sing-box
           git fetch qjebbs
           git cherry-pick $COMMIT || true
-          git remote add Adlyq https://github.com/Adlyq/sing-box
-          git fetch Adlyq
-          git cherry-pick $(git log Adlyq/dev-next --grep="custom header" --format=format:"%H") -x -n
           #git add mkdocs.yml
           #git -c core.editor=true cherry-pick --continue
           #sed -i "s/outbound := range r.outbounds/outbound := range r.outbounds.All()/g" route/router.go
@@ -263,7 +260,7 @@ jobs:
       - name: Build WithoutCGO
         if: ${{ matrix.job.type=='WithoutCGO' }}
         env:
-          TAGS: with_gvisor,with_http_custom_header
+          TAGS: with_gvisor
         run: |
           cd sing-box
           mkdir dist
@@ -283,7 +280,7 @@ jobs:
         if: ${{ matrix.job.type=='WithCGO' && matrix.job.target=='android-arm-7' }}
         env:
           #ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-          TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_shadowsocksr,with_acme,with_clash_api,with_v2ray_api,with_lwip,with_provider,with_reality_server,with_dhcp,with_http_custom_header
+          TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_shadowsocksr,with_acme,with_clash_api,with_v2ray_api,with_lwip,with_provider,with_reality_server,with_dhcp
           LDFLAGS: -s -w -buildid=
           CGO_ENABLED: 1
           CC: ${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi24-clang
@@ -314,7 +311,7 @@ jobs:
         if: ${{ matrix.job.type=='WithCGO' && matrix.job.target!='android-arm-7' }}
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-          TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_shadowsocksr,with_acme,with_clash_api,with_v2ray_api,with_lwip,with_http_custom_header
+          TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_shadowsocksr,with_acme,with_clash_api,with_v2ray_api,with_lwip
           LDFLAGS: -s -w -buildid=
           DIST: dist
           NAME: sing-box
