@@ -52,8 +52,8 @@ jobs:
           #git checkout -b cherry-pick_provider
           #git remote add qjebbs https://github.com/qjebbs/sing-box && git fetch --depth=3 qjebbs
           #git cherry-pick -x -n $(git log qjebbs/dev-next --grep=provider --format=format:"%H")
-          git remote add Adlyq https://github.com/Adlyq/sing-box && git fetch Adlyq
-          git cherry-pick $(git log Adlyq/dev-next --grep="custom header" --format=format:"%H") -x -n
+          #git remote add Adlyq https://github.com/Adlyq/sing-box && git fetch Adlyq
+          #git cherry-pick $(git log Adlyq/dev-next --grep="custom header" --format=format:"%H") -x -n
           cd ..
       
       - name: Set ENV
@@ -238,8 +238,8 @@ jobs:
           #git checkout -b cherry-pick_provider
           #git remote add qjebbs https://github.com/qjebbs/sing-box && git fetch --depth=3 qjebbs
           #git cherry-pick -x -n $(git log qjebbs/dev-next --grep=provider --format=format:"%H")
-          git remote add Adlyq https://github.com/Adlyq/sing-box && git fetch Adlyq
-          git cherry-pick $(git log Adlyq/dev-next --grep="custom header" --format=format:"%H") -x -n
+          #git remote add Adlyq https://github.com/Adlyq/sing-box && git fetch Adlyq
+          #git cherry-pick $(git log Adlyq/dev-next --grep="custom header" --format=format:"%H") -x -n
           cd ..
       
       - name: Set ENV
@@ -409,8 +409,8 @@ jobs:
           #git checkout -b cherry-pick_provider
           #git remote add qjebbs https://github.com/qjebbs/sing-box && git fetch --depth=3 qjebbs
           #git cherry-pick -x -n $(git log qjebbs/dev-next --grep=provider --format=format:"%H")
-          git remote add Adlyq https://github.com/Adlyq/sing-box && git fetch Adlyq
-          git cherry-pick $(git log Adlyq/dev-next --grep="custom header" --format=format:"%H") -x -n
+          #git remote add Adlyq https://github.com/Adlyq/sing-box && git fetch Adlyq
+          #git cherry-pick $(git log Adlyq/dev-next --grep="custom header" --format=format:"%H") -x -n
           cd ..
       
       - name: Set ENV
