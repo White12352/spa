@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         job:
-          - { type: "WithoutCGO", name: "windows-amd64", goos: "windows", goarch: "amd64", goamd64: "v1", id: "1" }
+          - { type: "WithoutCGO", name: "windows-amd64-v1.exe", goos: "windows", goarch: "amd64", goamd64: "v1", id: "1" }
           - { type: "WithCGO", target: "windows/*", id: "2" }
           - { type: "WithCGO", target: "linux/386,linux/amd64", id: "3" }
           - { type: "WithCGO", target: "linux/arm64,linux/riscv64", id: "4" }
