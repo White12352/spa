@@ -20,6 +20,7 @@ jobs:
           - { type: "WithCGO", target: "linux/mips,linux/mipsle", id: "6" }
           - { type: "WithCGO", target: "linux/mips64,linux/mips64le", id: "7" }
           - { type: "WithCGO", target: "darwin-10.16/*", id: "8" }
+          - { type: "WithCGO", target: "android-arm64", id: "9" }
 
     steps:
       - name: Check out code into the Go module directory
@@ -86,6 +87,38 @@ jobs:
         run: |
           go test -v ./...
           
+      - uses: nttld/setup-ndk@v1
+        if: ${{ matrix.job.type=='WithCGO' && matrix.job.target=='android-arm64' }}
+        id: setup-ndk
+        with:
+          ndk-version: r25c
+          add-to-path: false
+          local-cache: true
+      
+      - name: Build Android
+        if: ${{ matrix.job.type=='WithCGO' && matrix.job.target=='android-arm64' }}
+        env:
+          #ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+          TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_shadowsocksr,with_acme,with_clash_api,with_v2ray_api,with_lwip,with_http_custom_header,with_reality_server,with_dhcp
+          CGO_ENABLED: 1
+          CC: ${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android33-clang
+          GOARCH: arm64
+          GOOS: android
+          DIST: dist
+          NAME: sing-box-android-arm64
+          MAIN: ./cmd/sing-box
+        run: |
+          cd sing-box
+          mkdir dist
+          TAGS=${TAGS}
+          LDFLAGS=${LDFLAGS}
+          DIST=${DIST}
+          NAME=${NAME}
+          MAIN=${MAIN}
+          VERSION=$(CGO_ENABLED=0 go run ./cmd/internal/read_tag)
+          CGO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} go build -v -trimpath -tags ${TAGS} -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" -o ${DIST}/${NAME} ${MAIN}
+          cd ..
+      
       - name: Set up xgo
         if: ${{ matrix.job.type=='WithCGO' && matrix.job.target!='android-arm64' }}
         run: |
