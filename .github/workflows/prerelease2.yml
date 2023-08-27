@@ -97,7 +97,6 @@ jobs:
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
           TAGS: with_grpc,with_reality_server
-          LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=$(VERSION)' -s -w -buildid=
           DIST: dist
           NAME: sing-box
           MAIN: ./cmd/sing-box
@@ -109,10 +108,8 @@ jobs:
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
-          GOHOSTOS=$(go env GOHOSTOS)
-          GOHOSTARCH=$(go env GOHOSTARCH)
-          VERSION=$(CGO_ENABLED=0 GOOS=${GOHOSTOS} GOARCH=${GOHOSTARCH} go run ./cmd/internal/read_tag)
-          LDFLAGS=${LDFLAGS}
+          VERSION=$(CGO_ENABLED=0 go run ./cmd/internal/read_tag)
+          LDFLAGS=${-X 'github.com/sagernet/sing-box/constant.Version=$(VERSION)' -s -w -buildid=}
           xgo -v --targets="${{ matrix.job.target }}" --tags="${TAGS}" -ldflags="${LDFLAGS}" --out ${DIST}/${NAME} ${MAIN}
           cd ..
 
