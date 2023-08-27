@@ -92,7 +92,7 @@ jobs:
           cd sing-box
           GOHOSTOS=$(go env GOHOSTOS)
           GOHOSTARCH=$(go env GOHOSTARCH)
-          VERSION=$(CGO_ENABLED=0 GOOS=${GOHOSTOS} GOARCH=${GOHOSTARCH} go run ./cmd/internal/read_tag)
+          echo ::set-output name=VERSION::$(CGO_ENABLED=0 GOOS=${GOHOSTOS} GOARCH=${GOHOSTARCH} go run ./cmd/internal/read_tag)
           cd ..
       
       - uses: nttld/setup-ndk@v1
@@ -252,17 +252,19 @@ jobs:
           go test -v ./...
 
       - name: Version
+        id: version2
         run: |
           cd sing-box
           GOHOSTOS=$(go env GOHOSTOS)
           GOHOSTARCH=$(go env GOHOSTARCH)
-          VERSION=$(CGO_ENABLED=0 GOOS=${GOHOSTOS} GOARCH=${GOHOSTARCH} go run ./cmd/internal/read_tag)
+          echo ::set-output name=VERSION::$(CGO_ENABLED=0 GOOS=${GOHOSTOS} GOARCH=${GOHOSTARCH} go run ./cmd/internal/read_tag)
           cd ..
       
       - name: Build WithoutCGO
         if: ${{ matrix.job.type=='WithoutCGO' }}
         env:
           TAGS: with_gvisor
+          VERSION: ${{ steps.version2.outputs.VERSION }}
         run: |
           cd sing-box
           mkdir dist
@@ -433,7 +435,7 @@ jobs:
           cd sing-box
           GOHOSTOS=$(go env GOHOSTOS)
           GOHOSTARCH=$(go env GOHOSTARCH)
-          VERSION=$(CGO_ENABLED=0 GOOS=${GOHOSTOS} GOARCH=${GOHOSTARCH} go run ./cmd/internal/read_tag)
+          echo ::set-output name=VERSION::$(CGO_ENABLED=0 GOOS=${GOHOSTOS} GOARCH=${GOHOSTARCH} go run ./cmd/internal/read_tag)
           cd ..
       
       - name: Build WithoutCGO
