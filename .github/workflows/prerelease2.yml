@@ -92,7 +92,6 @@ jobs:
         if: ${{ matrix.job.type=='WithoutCGO' }}
         env:
           TAGS: with_gvisor,with_http_custom_header
-          LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=
           CGO_ENABLED: 0
           GOOS: ${{ matrix.job.goos }}
           GOARCH: ${{ matrix.job.goarch }}
@@ -128,7 +127,6 @@ jobs:
         env:
           #ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
           TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_shadowsocksr,with_acme,with_clash_api,with_v2ray_api,with_lwip,with_http_custom_header,with_reality_server,with_dhcp
-          LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=
           CGO_ENABLED: 1
           CC: ${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android33-clang
           GOARCH: arm64
@@ -148,7 +146,7 @@ jobs:
           GOHOSTARCH=$(go env GOHOSTARCH)
           VERSION=$(CGO_ENABLED=0 GOOS=${GOHOSTOS} GOARCH=${GOHOSTARCH} go run ./cmd/internal/read_tag)
           VERSION=$(go run ./cmd/internal/read_tag)
-          CGO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} go build -v -trimpath -tags ${TAGS} -ldflags "${LDFLAGS}" -o ${DIST}/${NAME} ${MAIN}
+          CGO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} go build -v -trimpath -tags ${TAGS} -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" -o ${DIST}/${NAME} ${MAIN}
           cd ..
           
       - name: Set up xgo
@@ -162,7 +160,6 @@ jobs:
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
           TAGS: with_grpc,with_reality_server
-          LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=
           DIST: dist
           NAME: sing-box
           MAIN: ./cmd/sing-box
@@ -179,7 +176,7 @@ jobs:
           GOHOSTARCH=$(go env GOHOSTARCH)
           VERSION=$(CGO_ENABLED=0 GOOS=${GOHOSTOS} GOARCH=${GOHOSTARCH} go run ./cmd/internal/read_tag)
           VERSION=$(go run ./cmd/internal/read_tag)
-          xgo -v --targets="${{ matrix.job.target }}" --tags="${TAGS}" -ldflags="${LDFLAGS}" --out ${DIST}/${NAME} ${MAIN}
+          xgo -v --targets="${{ matrix.job.target }}" --tags="${TAGS}" -ldflags="-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" --out ${DIST}/${NAME} ${MAIN}
           cd ..
 
       - name: Rename
