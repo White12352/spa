@@ -138,7 +138,6 @@ jobs:
           cd sing-box
           mkdir dist
           TAGS=${TAGS}
-          LDFLAGS=${LDFLAGS}
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
@@ -168,7 +167,6 @@ jobs:
           mkdir dist
           #go mod tidy -v
           TAGS=${TAGS}
-          LDFLAGS=${LDFLAGS}
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
