@@ -433,6 +433,7 @@ jobs:
           go test -v ./...
       
       - name: Version
+        id: version2
         run: |
           cd sing-box
           GOHOSTOS=$(go env GOHOSTOS)
@@ -523,6 +524,7 @@ jobs:
           DIST: dist
           NAME: sing-box-windows-amd64-gui
           MAIN: ./cmd/sing-box
+          VERSION: ${{ steps.version2.outputs.VERSION }}
         run: |
           cd sing-box
           mkdir dist
@@ -530,6 +532,7 @@ jobs:
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
+          VERSION=${VERSION}
           GO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} GOAMD64=${GOAMD64} go build -v -trimpath -tags ${TAGS} -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" -o ${DIST}/${NAME} ${MAIN}
           cd ..
       
