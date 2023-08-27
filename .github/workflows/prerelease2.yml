@@ -136,6 +136,7 @@ jobs:
         env:
           #ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
           TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_shadowsocksr,with_acme,with_clash_api,with_v2ray_api,with_lwip,with_http_custom_header,with_reality_server,with_dhcp
+          LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=
           CGO_ENABLED: 1
           CC: ${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android33-clang
           GOARCH: arm64
@@ -153,7 +154,7 @@ jobs:
           NAME=${NAME}
           MAIN=${MAIN}
           VERSION=${VERSION}
-          CGO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} go build -v -trimpath -tags ${TAGS} -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" -o ${DIST}/${NAME} ${MAIN}
+          CGO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} go build -v -trimpath -tags ${TAGS} -ldflags "${LDFLAGS}" -o ${DIST}/${NAME} ${MAIN}
           cd ..
       
       - name: Set up xgo
@@ -167,6 +168,7 @@ jobs:
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
           TAGS: with_grpc,with_reality_server
+          LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=
           DIST: dist
           NAME: sing-box
           MAIN: ./cmd/sing-box
@@ -176,11 +178,12 @@ jobs:
           mkdir dist
           #go mod tidy -v
           TAGS=${TAGS}
+          LDFLAGS=${LDFLAGS}
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
           VERSION=${VERSION}
-          xgo -v --targets="${{ matrix.job.target }}" --tags="${TAGS}" -ldflags="-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" --out ${DIST}/${NAME} ${MAIN}
+          xgo -v --targets="${{ matrix.job.target }}" --tags="${TAGS}" -ldflags="${LDFLAGS}" --out ${DIST}/${NAME} ${MAIN}
           cd ..
 
       - name: Rename
@@ -317,6 +320,7 @@ jobs:
         env:
           #ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
           TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_shadowsocksr,with_acme,with_clash_api,with_v2ray_api,with_lwip,with_http_custom_header,with_reality_server,with_dhcp
+          LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=
           CGO_ENABLED: 1
           CC: ${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi24-clang
           GOARCH: arm
@@ -330,11 +334,12 @@ jobs:
           cd sing-box
           mkdir dist
           TAGS=${TAGS}
+          LDFLAGS=${LDFLAGS}
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
           VERSION=${VERSION}
-          GO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} GOARM=${GOARM} go build -v -trimpath -tags ${TAGS} -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" -o ${DIST}/${NAME} ${MAIN}
+          GO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} GOARM=${GOARM} go build -v -trimpath -tags ${TAGS} -ldflags "${LDFLAGS}" -o ${DIST}/${NAME} ${MAIN}
           cd ..
         
       - name: Set up xgo
@@ -548,6 +553,7 @@ jobs:
         if: ${{ matrix.job.type=='WithCGO' && matrix.job.target=='windows-amd64-gui' }}
         env:
           TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_shadowsocksr,with_acme,with_clash_api,with_v2ray_api,with_lwip,with_http_custom_header
+          LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -H windowsgui -s -w -buildid=
           CGO_ENABLED: 1
           CC: x86_64-w64-mingw32-gcc
           GOARCH: amd64
@@ -561,11 +567,12 @@ jobs:
           cd sing-box
           mkdir dist
           TAGS=${TAGS}
+          LDFLAGS=${LDFLAGS}
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
           VERSION=${VERSION}
-          GO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} GOAMD64=${GOAMD64} go build -v -trimpath -tags ${TAGS} -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -H windowsgui -s -w -buildid=" -o ${DIST}/${NAME} ${MAIN}
+          GO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} GOAMD64=${GOAMD64} go build -v -trimpath -tags ${TAGS} -ldflags "${LDFLAGS}" -o ${DIST}/${NAME} ${MAIN}
           cd ..
       
       - name: Rename
