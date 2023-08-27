@@ -101,7 +101,7 @@ jobs:
         if: ${{ matrix.job.type=='WithoutCGO' }}
         env:
           TAGS: with_gvisor,with_http_custom_header
-          LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=
+          LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${{ steps.version2.outputs.VERSION }}' -s -w -buildid=
           CGO_ENABLED: 0
           GOOS: ${{ matrix.job.goos }}
           GOARCH: ${{ matrix.job.goarch }}
@@ -110,7 +110,6 @@ jobs:
           DIST: dist
           NAME: sing-box-${{ matrix.job.name }}
           MAIN: ./cmd/sing-box
-          VERSION: ${{ steps.version2.outputs.VERSION }}
         run: |
           cd sing-box
           mkdir dist
@@ -119,7 +118,6 @@ jobs:
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
-          VERSION=${VERSION}
           GO_ENABLED=${CGO_ENABLED} GOOS=${GOOS} GOARCH=${GOARCH} GOAMD64=${GOAMD64} GOAMRM=${GOARM} go build -v -trimpath -tags ${TAGS} -ldflags "${LDFLAGS}" -o ${DIST}/${NAME} ${MAIN}
           cd ..
       
@@ -136,7 +134,7 @@ jobs:
         env:
           #ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
           TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_shadowsocksr,with_acme,with_clash_api,with_v2ray_api,with_lwip,with_http_custom_header,with_reality_server,with_dhcp
-          LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=
+          LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${{ steps.version2.outputs.VERSION }}' -s -w -buildid=
           CGO_ENABLED: 1
           CC: ${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android33-clang
           GOARCH: arm64
@@ -144,7 +142,6 @@ jobs:
           DIST: dist
           NAME: sing-box-android-arm64
           MAIN: ./cmd/sing-box
-          VERSION: ${{ steps.version2.outputs.VERSION }}
         run: |
           cd sing-box
           mkdir dist
@@ -153,7 +150,6 @@ jobs:
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
-          VERSION=${VERSION}
           CGO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} go build -v -trimpath -tags ${TAGS} -ldflags "${LDFLAGS}" -o ${DIST}/${NAME} ${MAIN}
           cd ..
       
@@ -168,11 +164,10 @@ jobs:
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
           TAGS: with_grpc,with_reality_server
-          LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=
+          LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${{ steps.version2.outputs.VERSION }}' -s -w -buildid=
           DIST: dist
           NAME: sing-box
           MAIN: ./cmd/sing-box
-          VERSION: ${{ steps.version2.outputs.VERSION }}
         run: |
           cd sing-box
           mkdir dist
@@ -182,7 +177,6 @@ jobs:
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
-          VERSION=${VERSION}
           xgo -v --targets="${{ matrix.job.target }}" --tags="${TAGS}" -ldflags="${LDFLAGS}" --out ${DIST}/${NAME} ${MAIN}
           cd ..
 
@@ -320,7 +314,7 @@ jobs:
         env:
           #ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
           TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_shadowsocksr,with_acme,with_clash_api,with_v2ray_api,with_lwip,with_http_custom_header,with_reality_server,with_dhcp
-          LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=
+          LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${{ steps.version2.outputs.VERSION }}' -s -w -buildid=
           CGO_ENABLED: 1
           CC: ${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi24-clang
           GOARCH: arm
@@ -329,7 +323,6 @@ jobs:
           DIST: dist
           NAME: sing-box-android-arm-7
           MAIN: ./cmd/sing-box
-          VERSION: ${{ steps.version2.outputs.VERSION }}
         run: |
           cd sing-box
           mkdir dist
@@ -338,7 +331,6 @@ jobs:
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
-          VERSION=${VERSION}
           GO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} GOARM=${GOARM} go build -v -trimpath -tags ${TAGS} -ldflags "${LDFLAGS}" -o ${DIST}/${NAME} ${MAIN}
           cd ..
         
@@ -553,7 +545,7 @@ jobs:
         if: ${{ matrix.job.type=='WithCGO' && matrix.job.target=='windows-amd64-gui' }}
         env:
           TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_shadowsocksr,with_acme,with_clash_api,with_v2ray_api,with_lwip,with_http_custom_header
-          LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -H windowsgui -s -w -buildid=
+          LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${{ steps.version2.outputs.VERSION }}' -H windowsgui -s -w -buildid=
           CGO_ENABLED: 1
           CC: x86_64-w64-mingw32-gcc
           GOARCH: amd64
@@ -562,7 +554,6 @@ jobs:
           DIST: dist
           NAME: sing-box-windows-amd64-gui
           MAIN: ./cmd/sing-box
-          VERSION: ${{ steps.version2.outputs.VERSION }}
         run: |
           cd sing-box
           mkdir dist
@@ -571,7 +562,6 @@ jobs:
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
-          VERSION=${VERSION}
           GO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} GOAMD64=${GOAMD64} go build -v -trimpath -tags ${TAGS} -ldflags "${LDFLAGS}" -o ${DIST}/${NAME} ${MAIN}
           cd ..
       
