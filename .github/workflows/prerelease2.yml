@@ -88,6 +88,7 @@ jobs:
           go test -v ./...
           
       - name: Version
+        id: version2
         run: |
           cd sing-box
           GOHOSTOS=$(go env GOHOSTOS)
@@ -115,6 +116,7 @@ jobs:
           DIST: dist
           NAME: sing-box-android-arm64
           MAIN: ./cmd/sing-box
+          VERSION: ${{ steps.version2.outputs.VERSION }}
         run: |
           cd sing-box
           mkdir dist
