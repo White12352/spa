@@ -87,6 +87,12 @@ jobs:
         run: |
           go test -v ./...
           
+      - name: Version
+        run: |
+          GOHOSTOS=$(go env GOHOSTOS)
+          GOHOSTARCH=$(go env GOHOSTARCH)
+          VERSION=$(CGO_ENABLED=0 GOOS=${GOHOSTOS} GOARCH=${GOHOSTARCH} go run ./cmd/internal/read_tag)
+      
       - uses: nttld/setup-ndk@v1
         if: ${{ matrix.job.type=='WithCGO' && matrix.job.target=='android-arm64' }}
         id: setup-ndk
@@ -115,7 +121,6 @@ jobs:
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
-          VERSION=$(CGO_ENABLED=0 go run ./cmd/internal/read_tag)
           CGO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} go build -v -trimpath -tags ${TAGS} -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" -o ${DIST}/${NAME} ${MAIN}
           cd ..
       
@@ -141,7 +146,6 @@ jobs:
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
-          VERSION=$(CGO_ENABLED=0 go run ./cmd/internal/read_tag)
           xgo -v --targets="${{ matrix.job.target }}" --tags="${TAGS}" -ldflags="-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" --out ${DIST}/${NAME} ${MAIN}
           cd ..
 
@@ -245,6 +249,12 @@ jobs:
         run: |
           go test -v ./...
 
+      - name: Version
+        run: |
+          GOHOSTOS=$(go env GOHOSTOS)
+          GOHOSTARCH=$(go env GOHOSTARCH)
+          VERSION=$(CGO_ENABLED=0 GOOS=${GOHOSTOS} GOARCH=${GOHOSTARCH} go run ./cmd/internal/read_tag)
+      
       - name: Build WithoutCGO
         if: ${{ matrix.job.type=='WithoutCGO' }}
         env:
@@ -284,7 +294,6 @@ jobs:
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
-          VERSION=$(CGO_ENABLED=0 go run ./cmd/internal/read_tag)
           GO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} GOARM=${GOARM} go build -v -trimpath -tags ${TAGS} -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" -o ${DIST}/${NAME} ${MAIN}
           cd ..
         
@@ -415,6 +424,12 @@ jobs:
         run: |
           go test -v ./...
       
+      - name: Version
+        run: |
+          GOHOSTOS=$(go env GOHOSTOS)
+          GOHOSTARCH=$(go env GOHOSTARCH)
+          VERSION=$(CGO_ENABLED=0 GOOS=${GOHOSTOS} GOARCH=${GOHOSTARCH} go run ./cmd/internal/read_tag)
+      
       - name: Build WithoutCGO
         if: ${{ matrix.job.type=='WithoutCGO' }}
         env:
@@ -505,7 +520,6 @@ jobs:
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
-          VERSION=$(CGO_ENABLED=0 go run ./cmd/internal/read_tag)
           GO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} GOAMD64=${GOAMD64} go build -v -trimpath -tags ${TAGS} -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" -o ${DIST}/${NAME} ${MAIN}
           cd ..
       
