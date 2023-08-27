@@ -101,6 +101,8 @@ jobs:
           DIST: dist
           NAME: sing-box
           MAIN: ./cmd/sing-box
+          GOHOSTOS: ${{ runner.os }}
+          GOHOSTARCH: ${{ runner.arch }}
         run: |
           cd sing-box
           mkdir dist
@@ -109,8 +111,6 @@ jobs:
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
-          GOHOSTOS=$(go env GOHOSTOS)
-          GOHOSTARCH=$(go env GOHOSTARCH)
           VERSION=$(CGO_ENABLED=0 GOOS=$(GOHOSTOS) GOARCH=$(GOHOSTARCH) go run ./cmd/internal/read_tag)
           xgo -v --targets="${{ matrix.job.target }}" --tags="${TAGS}" -ldflags="${LDFLAGS}" --out ${DIST}/${NAME} ${MAIN}
           cd ..
