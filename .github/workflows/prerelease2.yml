@@ -122,30 +122,19 @@ jobs:
           add-to-path: false
           local-cache: true
       
-      - name: Build Android
-        if: ${{ matrix.job.type=='WithCGO' && matrix.job.target=='android-arm64' }}
+      - name: Build core
         env:
-          #ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-          TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_shadowsocksr,with_acme,with_clash_api,with_v2ray_api,with_lwip,with_reality_server,with_dhcp
-          CGO_ENABLED: 1
-          CC: ${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android33-clang
-          GOARCH: arm64
-          GOOS: android
-          DIST: dist
-          NAME: sing-box-android-arm64
-          MAIN: ./cmd/sing-box
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: |
           cd sing-box
           mkdir dist
-          TAGS=${TAGS}
-          DIST=${DIST}
-          NAME=${NAME}
-          MAIN=${MAIN}
+          CC=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android33-clang
           GOHOSTOS=$(go env GOHOSTOS)
           GOHOSTARCH=$(go env GOHOSTARCH)
           VERSION=$(CGO_ENABLED=0 GOOS=${GOHOSTOS} GOARCH=${GOHOSTARCH} go run ./cmd/internal/read_tag)
           VERSION=$(go run ./cmd/internal/read_tag)
-          CGO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} go build -v -trimpath -tags ${TAGS} -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" -o ${DIST}/${NAME} ${MAIN}
+          CGO_ENABLED=1 CC=${CC} GOARCH=arm64 GOOS=android go build -v -trimpath -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" -tags "with_quic,with_grpc,with_wireguard,with_gvisor,with_shadowsocksr,with_utls,with_clash_api,with_proxyprovider" ./cmd/sing-box
+          CGO_ENABLED=0 GOARCH=amd64 GOOS=windows go build -v -trimpath -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -H windowsgui -s -w -buildid=" -tags "with_quic,with_grpc,with_wireguard,with_gvisor,with_shadowsocksr,with_utls,with_clash_api,with_proxyprovider" ./cmd/sing-box
           cd ..
           
       - name: Set up xgo
