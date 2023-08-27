@@ -106,13 +106,13 @@ jobs:
           mkdir dist
           TAGS=${TAGS}
           LDFLAGS=${LDFLAGS}
-          DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
           GOHOSTOS=$(go env GOHOSTOS)
           GOHOSTARCH=$(go env GOHOSTARCH)
           VERSION=$(CGO_ENABLED=0 GOOS=${GOHOSTOS} GOARCH=${GOHOSTARCH} go run ./cmd/internal/read_tag)
           VERSION=$(go run ./cmd/internal/read_tag)
+          DIST=${-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=}
           GO_ENABLED=${CGO_ENABLED} GOOS=${GOOS} GOARCH=${GOARCH} GOAMD64=${GOAMD64} GOAMRM=${GOARM} go build -v -trimpath -tags ${TAGS} -ldflags "${LDFLAGS}" -o ${DIST}/${NAME} ${MAIN}
           cd ..
 
