@@ -101,8 +101,6 @@ jobs:
           DIST: dist
           NAME: sing-box
           MAIN: ./cmd/sing-box
-          GOHOSTOS: ${{ runner.os }}
-          GOHOSTARCH: ${{ runner.arch }}
         run: |
           cd sing-box
           mkdir dist
