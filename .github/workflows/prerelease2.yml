@@ -13,7 +13,6 @@ jobs:
       fail-fast: false
       matrix:
         job:
-          - { type: "WithoutCGO", name: "windows-amd64-v3.exe", goos: "windows", goarch: "amd64", goamd64: "v3", id: "1" }
           - { type: "WithCGO", target: "windows/*", id: "2" }
           - { type: "WithCGO", target: "linux/386,linux/amd64", id: "3" }
           - { type: "WithCGO", target: "linux/arm64,linux/riscv64", id: "4" }
@@ -21,7 +20,6 @@ jobs:
           - { type: "WithCGO", target: "linux/mips,linux/mipsle", id: "6" }
           - { type: "WithCGO", target: "linux/mips64,linux/mips64le", id: "7" }
           - { type: "WithCGO", target: "darwin-10.16/*", id: "8" }
-          - { type: "WithCGO", target: "android-arm64", id: "9" }
 
     steps:
       - name: Check out code into the Go module directory
