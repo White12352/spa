@@ -109,7 +109,7 @@ jobs:
           NAME=${NAME}
           MAIN=${MAIN}
           VERSION=$(CGO_ENABLED=0 go run ./cmd/internal/read_tag)
-          xgo -v --targets="${{ matrix.job.target }}" --tags="${TAGS}" -ldflags="${-X 'github.com/sagernet/sing-box/constant.Version=$(VERSION)' -s -w -buildid=}" --out ${DIST}/${NAME} ${MAIN}
+          xgo -v --targets="${{ matrix.job.target }}" --tags="${TAGS}" -ldflags="-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" --out ${DIST}/${NAME} ${MAIN}
           cd ..
 
       - name: Rename
@@ -248,12 +248,11 @@ jobs:
           cd sing-box
           mkdir dist
           TAGS=${TAGS}
-          LDFLAGS=${LDFLAGS}
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
           VERSION=$(CGO_ENABLED=0 go run ./cmd/internal/read_tag)
-          GO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} GOARM=${GOARM} go build -v -trimpath -tags ${TAGS} -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=$(VERSION)' -s -w -buildid=" -o ${DIST}/${NAME} ${MAIN}
+          GO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} GOARM=${GOARM} go build -v -trimpath -tags ${TAGS} -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" -o ${DIST}/${NAME} ${MAIN}
           cd ..
         
       - name: Set up xgo
@@ -470,12 +469,11 @@ jobs:
           cd sing-box
           mkdir dist
           TAGS=${TAGS}
-          LDFLAGS=${LDFLAGS}
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
           VERSION=$(CGO_ENABLED=0 go run ./cmd/internal/read_tag)
-          GO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} GOAMD64=${GOAMD64} go build -v -trimpath -tags ${TAGS} -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=$(VERSION)' -s -w -buildid=" -o ${DIST}/${NAME} ${MAIN}
+          GO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} GOAMD64=${GOAMD64} go build -v -trimpath -tags ${TAGS} -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" -o ${DIST}/${NAME} ${MAIN}
           cd ..
       
       - name: Rename
