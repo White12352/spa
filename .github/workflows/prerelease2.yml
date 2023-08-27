@@ -124,11 +124,10 @@ jobs:
       
       - name: Build core
         env:
-          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+          CC: ${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android33-clang
         run: |
           cd sing-box
           mkdir dist
-          CC=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android33-clang
           GOHOSTOS=$(go env GOHOSTOS)
           GOHOSTARCH=$(go env GOHOSTARCH)
           VERSION=$(CGO_ENABLED=0 GOOS=${GOHOSTOS} GOARCH=${GOHOSTARCH} go run ./cmd/internal/read_tag)
