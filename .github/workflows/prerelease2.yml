@@ -87,54 +87,6 @@ jobs:
         if: ${{ github.ref_name=='debug' && matrix.job.id=='1' && matrix.job.type=='WithoutCGO' }}
         run: |
           go test -v ./...
-
-      - name: Build WithoutCGO
-        if: ${{ matrix.job.type=='WithoutCGO' }}
-        env:
-          TAGS: with_grpc,with_reality_server
-          CGO_ENABLED: 0
-          GOOS: ${{ matrix.job.goos }}
-          GOARCH: ${{ matrix.job.goarch }}
-          GOAMD64: ${{ matrix.job.goamd64 }}
-          GOARM: ${{ matrix.job.goarm }}
-          DIST: dist
-          NAME: sing-box-${{ matrix.job.name }}
-          MAIN: ./cmd/sing-box
-        run: |
-          cd sing-box
-          mkdir dist
-          TAGS=${TAGS}
-          DIST=${DIST}
-          NAME=${NAME}
-          MAIN=${MAIN}
-          GOHOSTOS=$(go env GOHOSTOS)
-          GOHOSTARCH=$(go env GOHOSTARCH)
-          VERSION=$(CGO_ENABLED=0 GOOS=${GOHOSTOS} GOARCH=${GOHOSTARCH} go run ./cmd/internal/read_tag)
-          VERSION=$(go run ./cmd/internal/read_tag)
-          GO_ENABLED=${CGO_ENABLED} GOOS=${GOOS} GOARCH=${GOARCH} GOAMD64=${GOAMD64} GOAMRM=${GOARM} go build -v -trimpath -tags ${TAGS} -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" -o ${DIST}/${NAME} ${MAIN}
-          cd ..
-
-      - uses: nttld/setup-ndk@v1
-        if: ${{ matrix.job.type=='WithCGO' && matrix.job.target=='android-arm64' }}
-        id: setup-ndk
-        with:
-          ndk-version: r25b
-          add-to-path: false
-          local-cache: true
-      
-      - name: Build core
-        env:
-          CC: ${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android33-clang
-        run: |
-          cd sing-box
-          mkdir dist
-          GOHOSTOS=$(go env GOHOSTOS)
-          GOHOSTARCH=$(go env GOHOSTARCH)
-          VERSION=$(CGO_ENABLED=0 GOOS=${GOHOSTOS} GOARCH=${GOHOSTARCH} go run ./cmd/internal/read_tag)
-          VERSION=$(go run ./cmd/internal/read_tag)
-          CGO_ENABLED=1 CC=${CC} GOARCH=arm64 GOOS=android go build -v -trimpath -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" -tags "with_quic,with_grpc,with_wireguard,with_gvisor,with_shadowsocksr,with_utls,with_clash_api,with_proxyprovider" ./cmd/sing-box
-          CGO_ENABLED=0 GOARCH=amd64 GOOS=windows go build -v -trimpath -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -H windowsgui -s -w -buildid=" -tags "with_quic,with_grpc,with_wireguard,with_gvisor,with_shadowsocksr,with_utls,with_clash_api,with_proxyprovider" ./cmd/sing-box
-          cd ..
           
       - name: Set up xgo
         if: ${{ matrix.job.type=='WithCGO' && matrix.job.target!='android-arm64' }}
