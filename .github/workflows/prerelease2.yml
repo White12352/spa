@@ -125,6 +125,7 @@ jobs:
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
+          VERSION=${VERSION}
           CGO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} go build -v -trimpath -tags ${TAGS} -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" -o ${DIST}/${NAME} ${MAIN}
           cd ..
       
@@ -142,6 +143,7 @@ jobs:
           DIST: dist
           NAME: sing-box
           MAIN: ./cmd/sing-box
+          VERSION: ${{ steps.version2.outputs.VERSION }}
         run: |
           cd sing-box
           mkdir dist
@@ -150,6 +152,7 @@ jobs:
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
+          VERSION=${VERSION}
           xgo -v --targets="${{ matrix.job.target }}" --tags="${TAGS}" -ldflags="-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" --out ${DIST}/${NAME} ${MAIN}
           cd ..
 
@@ -295,6 +298,7 @@ jobs:
           DIST: dist
           NAME: sing-box-android-arm-7
           MAIN: ./cmd/sing-box
+          VERSION: ${{ steps.version2.outputs.VERSION }}
         run: |
           cd sing-box
           mkdir dist
@@ -302,6 +306,7 @@ jobs:
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
+          VERSION=${VERSION}
           GO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} GOARM=${GOARM} go build -v -trimpath -tags ${TAGS} -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" -o ${DIST}/${NAME} ${MAIN}
           cd ..
         
@@ -533,7 +538,7 @@ jobs:
           NAME=${NAME}
           MAIN=${MAIN}
           VERSION=${VERSION}
-          GO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} GOAMD64=${GOAMD64} go build -v -trimpath -tags ${TAGS} -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" -o ${DIST}/${NAME} ${MAIN}
+          GO_ENABLED=${CGO_ENABLED} CC=${CC} GOOS=${GOOS} GOARCH=${GOARCH} GOAMD64=${GOAMD64} go build -v -trimpath -tags ${TAGS} -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -H windowsgui -s -w -buildid=" -o ${DIST}/${NAME} ${MAIN}
           cd ..
       
       - name: Rename
