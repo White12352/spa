@@ -111,9 +111,10 @@ jobs:
           DIST=${DIST}
           NAME=${NAME}
           MAIN=${MAIN}
-          GOHOSTOS=${GOHOSTOS}
-          GOHOSTARCH=${GOHOSTARCH}
-          VERSION=$(CGO_ENABLED=0 GOOS=$(GOHOSTOS) GOARCH=$(GOHOSTARCH) go run ./cmd/internal/read_tag)
+          GOHOSTOS=$(go env GOHOSTOS)
+          GOHOSTARCH=$(go env GOHOSTARCH)
+          VERSION=$(CGO_ENABLED=0 GOOS=${GOHOSTOS} GOARCH=${GOHOSTARCH} go run ./cmd/internal/read_tag)
+          LDFLAGS=${LDFLAGS}
           xgo -v --targets="${{ matrix.job.target }}" --tags="${TAGS}" -ldflags="${LDFLAGS}" --out ${DIST}/${NAME} ${MAIN}
           cd ..
 
