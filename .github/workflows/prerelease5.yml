@@ -57,7 +57,6 @@ jobs:
           cd SFA
           echo "VERSION_NAME=${version}" > local.properties
           echo "VERSION_CODE=$(date +%Y%m%d%H)" >> local.properties
-          sed -i '/signingConfigs\.release/d' app/build.gradle
           chmod +x ./gradlew
           ./gradlew assembleRelease
 
