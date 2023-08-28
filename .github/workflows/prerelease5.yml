@@ -43,6 +43,11 @@ jobs:
           java-version: 20
 
       - name: Build SFA
+        env:
+          KEYSTORE_PATH: "${{ github.workspace }}/.github/k.jks"
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           mkdir -p SFA/app/libs/
           make lib_install
