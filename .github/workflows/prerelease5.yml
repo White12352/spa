@@ -26,8 +26,7 @@ jobs:
 
       - name: Checkout Source Code
         run: |
-          git clone -b dev-next-yaott https://github.com/CHIZI-0618/sing-box sing-box
-          cd sing-box
+          git clone -b dev-next-yaott https://github.com/CHIZI-0618/sing-box ${{ github.workspace }}
       
       - name: Checkout SFA Repository
         uses: actions/checkout@v3
