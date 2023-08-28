@@ -27,7 +27,7 @@ jobs:
       - name: Checkout Source Code
         run: |
           git clone -b dev-next-yaott https://github.com/CHIZI-0618/sing-box code
-          mv /code/* . && rm -rf /code
+          mv ${{ github.workspace }}/code/* ${{ github.workspace }} && rm -rf ${{ github.workspace }}/code
       
       - name: Checkout SFA Repository
         uses: actions/checkout@v3
