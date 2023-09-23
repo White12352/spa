@@ -100,7 +100,7 @@ jobs:
       - name: Build WithoutCGO
         if: ${{ matrix.job.type=='WithoutCGO' }}
         env:
-          TAGS: with_gvisor,with_http_custom_header
+          TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_utls,with_shadowsocksr
           LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${{ steps.version2.outputs.VERSION }}' -s -w -buildid=
           CGO_ENABLED: 0
           GOOS: ${{ matrix.job.goos }}
