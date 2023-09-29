@@ -164,7 +164,7 @@ jobs:
         if: ${{ matrix.job.type=='WithCGO' && matrix.job.target!='android-arm64' }}
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-          TAGS: with_grpc,with_reality_server
+          TAGS: with_quic,with_dhcp,with_ech,with_reality_server,with_gvisor
           LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${{ steps.version2.outputs.VERSION }}' -s -w -buildid=
           DIST: dist
           NAME: sing-box
