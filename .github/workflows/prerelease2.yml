@@ -345,7 +345,7 @@ jobs:
         if: ${{ matrix.job.type=='WithCGO' && matrix.job.target!='android-arm-7' }}
         env:
           #ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-          TAGS: with_grpc,with_reality_server
+          TAGS: with_reality_server
           LDFLAGS: -s -w -buildid=
           DIST: dist
           NAME: sing-box
