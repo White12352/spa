@@ -48,7 +48,7 @@ jobs:
           ##git -c core.editor=true cherry-pick --continue
           ##sed -i "s/outbound := range r.outbounds/outbound := range r.outbounds.All()/g" route/router.go
           #sed -i "s/v.TLSAllowInsecure/true/g" common/link/vmess.go
-          git clone -b dev-next https://github.com/SagerNet/sing-box sing-box
+          git clone -b dev-next https://github.com/White12352/sing-box sing-box
           cd sing-box
           #git checkout -b cherry-pick_provider
           #git remote add qjebbs https://github.com/qjebbs/sing-box && git fetch --depth=3 qjebbs
@@ -243,7 +243,7 @@ jobs:
           ##git -c core.editor=true cherry-pick --continue
           ##sed -i "s/outbound := range r.outbounds/outbound := range r.outbounds.All()/g" route/router.go
           #sed -i "s/v.TLSAllowInsecure/true/g" common/link/vmess.go
-          git clone -b dev-next https://github.com/SagerNet/sing-box sing-box
+          git clone -b dev-next https://github.com/White12352/sing-box sing-box
           cd sing-box
           #git checkout -b cherry-pick_provider
           #git remote add qjebbs https://github.com/qjebbs/sing-box && git fetch --depth=3 qjebbs
@@ -424,7 +424,7 @@ jobs:
           ##git -c core.editor=true cherry-pick --continue
           ##sed -i "s/outbound := range r.outbounds/outbound := range r.outbounds.All()/g" route/router.go
           #sed -i "s/v.TLSAllowInsecure/true/g" common/link/vmess.go
-          git clone -b dev-next https://github.com/SagerNet/sing-box sing-box
+          git clone -b dev-next https://github.com/White12352/sing-box sing-box
           cd sing-box
           #git checkout -b cherry-pick_provider
           #git remote add qjebbs https://github.com/qjebbs/sing-box && git fetch --depth=3 qjebbs
