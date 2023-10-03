@@ -50,6 +50,8 @@ jobs:
           #sed -i "s/v.TLSAllowInsecure/true/g" common/link/vmess.go
           git clone -b dev-next https://github.com/SagerNet/sing-box sing-box
           cd sing-box
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
           git revert b728ba5
           #git checkout -b cherry-pick_provider
           #git remote add qjebbs https://github.com/qjebbs/sing-box && git fetch --depth=3 qjebbs
