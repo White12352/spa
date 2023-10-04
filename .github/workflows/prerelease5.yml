@@ -83,7 +83,8 @@ jobs:
           mkdir -p SFA/app/libs/
           cd code
           make lib_install
-          CGO_ENABLED=1 gomobile bind -v -androidapi 21 -javapkg=io.nekohasekai -libname=box -tags ${TAGS} -ldflags "-X github.com/sagernet/sing-box/constant.Version=${version} -buildid=" ./experimental/libbox
+          VERSION_NAME=${VERSION_NAME}
+          CGO_ENABLED=1 gomobile bind -v -androidapi 21 -javapkg=io.nekohasekai -libname=box -tags ${TAGS} -ldflags "-X github.com/sagernet/sing-box/constant.Version=${VERSION_NAME} -buildid=" ./experimental/libbox
           cp ./libbox.aar ${{ github.workspace }}/SFA/app/libs/
           cd ../SFA
           #sed -i '23s|.*|        versionCode getProps("VERSION_CODE").toInteger()|' ${{ github.workspace }}/SFA/app/build.gradle
