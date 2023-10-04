@@ -119,7 +119,7 @@ jobs:
       - name: Build WithoutCGO
         if: ${{ matrix.job.type=='WithoutCGO' }}
         env:
-          TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_utls,with_shadowsocksr
+          TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_utls
           LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${{ steps.version2.outputs.VERSION }}' -s -w -buildid=
           CGO_ENABLED: 0
           GOOS: ${{ matrix.job.goos }}
@@ -152,7 +152,7 @@ jobs:
         if: ${{ matrix.job.type=='WithCGO' && matrix.job.target=='android-arm64' }}
         env:
           #ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-          TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_shadowsocksr,with_acme,with_clash_api,with_v2ray_api,with_lwip,with_http_custom_header,with_reality_server,with_dhcp
+          TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_acme,with_clash_api,with_v2ray_api,with_lwip,with_http_custom_header,with_reality_server,with_dhcp
           LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${{ steps.version2.outputs.VERSION }}' -s -w -buildid=
           CGO_ENABLED: 1
           CC: ${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android33-clang
@@ -347,7 +347,7 @@ jobs:
         if: ${{ matrix.job.type=='WithCGO' && matrix.job.target=='android-arm-7' }}
         env:
           #ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-          TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_shadowsocksr,with_acme,with_clash_api,with_v2ray_api,with_lwip,with_http_custom_header,with_reality_server,with_dhcp
+          TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_acme,with_clash_api,with_v2ray_api,with_lwip,with_http_custom_header,with_reality_server,with_dhcp
           LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${{ steps.version2.outputs.VERSION }}' -s -w -buildid=
           CGO_ENABLED: 1
           CC: ${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi24-clang
@@ -593,7 +593,7 @@ jobs:
       - name: Build background sing-box on Windows
         if: ${{ matrix.job.type=='WithCGO' && matrix.job.target=='windows-amd64-gui' }}
         env:
-          TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_shadowsocksr,with_acme,with_clash_api,with_v2ray_api,with_lwip,with_http_custom_header
+          TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_acme,with_clash_api,with_v2ray_api,with_lwip,with_http_custom_header
           LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${{ steps.version2.outputs.VERSION }}' -H windowsgui -s -w -buildid=
           CGO_ENABLED: 1
           CC: x86_64-w64-mingw32-gcc
