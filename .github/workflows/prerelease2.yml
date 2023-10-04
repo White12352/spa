@@ -621,7 +621,7 @@ jobs:
           path: sing-box/dist/
 
       - name: Display structure of downloaded files
-        run: ls -R
+        run: ls -R && echo "time=$(date +%Y%m%d%H)" >> $GITHUB_ENV
         working-directory: sing-box/dist
 
       - name: Delete current release assets
@@ -643,7 +643,7 @@ jobs:
         if: ${{  success() }}
         with:
           tag: ${{ github.ref_name }}
-          tag_name: dev-next2-${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}-${{ env.time }}
           files: sing-box/dist/*
           prerelease: true
           generate_release_notes: true
