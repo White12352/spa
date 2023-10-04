@@ -56,6 +56,8 @@ jobs:
           cd SFA
           echo "VERSION_NAME=${version}" > local.properties
           echo "VERSION_CODE=$(date +%Y%m%d%H)" >> local.properties
+          sed -i '23s|.*|        versionCode getProps("VERSION_CODE").toInteger()|' ${{ github.workspace }}/SFA/app/build.gradle
+          sed -i '24s|.*|        versionName getProps("VERSION_NAME")|' ${{ github.workspace }}/SFA/app/build.gradle
           sed -i '30s|.*|            storeFile file(System.getenv("KEYSTORE_PATH"))|' ${{ github.workspace }}/SFA/app/build.gradle
           #chmod +x ./gradlew
           #dos2unix ./gradlew
