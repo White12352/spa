@@ -39,9 +39,9 @@ jobs:
           mv ${{ github.workspace }}/code/* ${{ github.workspace }} && rm -rf ${{ github.workspace }}/code
           git clone -b build https://github.com/yaotthaha/sing-box-for-android SFA
           cd SFA
-          git remote add SagerNet https://github.com/SagerNet/sing-box-for-android
-          git fetch sing-box-for-android main
-          git merge sing-box-for-android/main
+          git remote add snsfa https://github.com/SagerNet/sing-box-for-android
+          git fetch snsfa main
+          git merge snsfa/main
           cd ..
 
       - name: Setup Java
