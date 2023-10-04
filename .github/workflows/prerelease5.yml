@@ -72,8 +72,8 @@ jobs:
           VERSION_NAME: ${{ github.event.inputs.version_name }}
         run: |
           mkdir -p SFA/app/libs/
-          make lib_install
           cd code
+          make lib_install
           CGO_ENABLED=1 gomobile bind -v -androidapi 21 -javapkg=io.nekohasekai -libname=box -tags ${TAGS} -ldflags "-X github.com/sagernet/sing-box/constant.Version=${version} -buildid=" ./experimental/libbox
           cp ./libbox.aar ${{ github.workspace }}/SFA/app/libs/
           cd ../SFA
