@@ -60,6 +60,12 @@ jobs:
           echo "VERSION_CODE=$(date +%Y%m%d%H)" >> $GITHUB_ENV
           cd ..
 
+      - name: Verify Environment Variables
+        run: |
+          echo "RELEASE_NAME: $RELEASE_NAME"
+          echo "TAG_NAME: $TAG_NAME"
+          echo "VERSION_NAME: $VERSION_NAME"
+          echo "VERSION_CODE: $VERSION_CODE"
       
       - name: Build SFA
         env:
@@ -67,8 +73,8 @@ jobs:
           KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
           ALIAS_NAME: ${{ secrets.ALIAS_NAME }}
           ALIAS_PASS: ${{ secrets.ALIAS_PASS }}
-          VERSION_CODE: ${{ github.event.inputs.version_code }}
-          VERSION_NAME: ${{ github.event.inputs.version_name }}
+          VERSION_CODE: ${{ env.VERSION_CODE }}
+          VERSION_NAME: ${{ env.VERSION_NAME }}
         run: |
           mkdir -p SFA/app/libs/
           cd code
