@@ -55,12 +55,16 @@ jobs:
           cd sing-box
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
-          git reset --hard d0c0315
+          #git reset --hard d0c0315
           #git revert 57521fd
-          git revert b728ba5
-          git remote add sing-box https://github.com/SagerNet/sing-box
+          #git revert b728ba5
+          git remote add sing-box https://github.com/White12352/sing-box
           git fetch sing-box dev-next
-          git merge sing-box/dev-next
+          git cherry-pick -x -n 447e907
+          git cherry-pick -x -n 8247932
+          git cherry-pick -x -n 18b0270
+          git cherry-pick -x -n 4dccc0b
+          git cherry-pick -x -n 4b20e3c
           git remote add PuerNya https://github.com/PuerNya/sing-box && git fetch PuerNya sniff-bittorrent
           git cherry-pick -x -n $(git log PuerNya/sniff-bittorrent --grep=bittorrent --format=format:"%H")
           go mod tidy
