@@ -58,7 +58,7 @@ jobs:
           echo "VERSION_CODE=$(date +%Y%m%d%H)" >> local.properties
           sed -i '30s|.*|            storeFile file(System.getenv("KEYSTORE_PATH"))|' ${{ github.workspace }}/SFA/app/build.gradle
           #chmod +x ./gradlew
-          dos2unix ./gradlew
+          #dos2unix ./gradlew
           chmod 0755 ./gradlew
           ./gradlew assembleRelease
 
