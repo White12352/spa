@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      TAGS: with_quic,with_grpc,with_wireguard,with_gvisor,with_shadowsocksr,with_utls,with_clash_api,with_proxyprovider
+      TAGS: with_quic,with_grpc,with_wireguard,with_gvisor,with_utls,with_ech,with_clash_api,with_proxyprovider,with_shadowsocksr
 
     steps:
       - uses: actions/checkout@v3
@@ -52,20 +52,20 @@ jobs:
 
       - name: Prepare
         run: |
-          tag="${{ github.event.inputs.version_name }}-${{ github.event.inputs.version_code }}-$(date +%Y%m%d%H%M)"
-          echo "RELEASE_NAME=Released on ${tag}" >> $GITHUB_ENV
-          echo "TAG_NAME=${tag}" >> $GITHUB_ENV
           cd code
           echo "VERSION_NAME=$(CGO_ENABLED=0 go run ./cmd/internal/read_tag)" >> $GITHUB_ENV
           echo "VERSION_CODE=$(date +%Y%m%d%H)" >> $GITHUB_ENV
           cd ..
+          tag="$VERSION_NAME-$VERSION_CODE-$(date +%Y%m%d%H%M)"
+          echo "RELEASE_NAME=Released on ${tag}" >> $GITHUB_ENV
+          echo "TAG_NAME=${tag}" >> $GITHUB_ENV
 
       - name: Verify Environment Variables
         run: |
-          echo "RELEASE_NAME: $RELEASE_NAME"
-          echo "TAG_NAME: $TAG_NAME"
           echo "VERSION_NAME: $VERSION_NAME"
           echo "VERSION_CODE: $VERSION_CODE"
+          echo "RELEASE_NAME: $RELEASE_NAME"
+          echo "TAG_NAME: $TAG_NAME"
       
       - name: Build SFA
         env:
