@@ -56,7 +56,7 @@ jobs:
           echo "VERSION_NAME=$(CGO_ENABLED=0 go run ./cmd/internal/read_tag)" >> $GITHUB_ENV
           echo "VERSION_CODE=$(date +%Y%m%d%H)" >> $GITHUB_ENV
           cd ..
-          tag="$VERSION_NAME-$VERSION_CODE-$(date +%Y%m%d%H%M)"
+          tag="${{ env.VERSION_NAME }}-{{ env.VERSION_CODE }}-$(date +%Y%m%d%H%M)"
           echo "RELEASE_NAME=Released on ${tag}" >> $GITHUB_ENV
           echo "TAG_NAME=${tag}" >> $GITHUB_ENV
 
@@ -73,8 +73,8 @@ jobs:
           KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
           ALIAS_NAME: ${{ secrets.ALIAS_NAME }}
           ALIAS_PASS: ${{ secrets.ALIAS_PASS }}
-          VERSION_CODE: ${{ env.VERSION_CODE }}
           VERSION_NAME: ${{ env.VERSION_NAME }}
+          VERSION_CODE: ${{ env.VERSION_CODE }}
         run: |
           mkdir -p SFA/app/libs/
           cd code
