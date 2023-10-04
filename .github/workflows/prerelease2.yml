@@ -24,6 +24,9 @@ jobs:
           - { type: "WithCGO", target: "darwin-10.16/*", id: "7" }
           - { type: "WithCGO", target: "android-arm64", id: "8" }
 
+    outputs:
+      output1: ${{ steps.version2.outputs.VERSION }}
+    
     steps:
       - name: Check out code into the Go module directory
         uses: actions/checkout@v3
@@ -621,7 +624,7 @@ jobs:
           path: sing-box/dist/
 
       - name: Display structure of downloaded files
-        run: ls -R && echo "time=$(date +%Y%m%d%H)" >> $GITHUB_ENV && version=$(echo ${{ needs.Build.outputs.VERSION }} | cut -d'-' -f3)
+        run: ls -R && echo "time=$(date +%Y%m%d%H)" >> $GITHUB_ENV && version=$(echo ${{ needs.Build.outputs.output1 }} | cut -d'-' -f3)
         working-directory: sing-box/dist
 
       - name: Delete current release assets
