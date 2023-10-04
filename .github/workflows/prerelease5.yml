@@ -51,7 +51,7 @@ jobs:
           cd SFA
           echo "VERSION_NAME=${version}" > local.properties
           echo "VERSION_CODE=$(date +%Y%m%d%H)" >> local.properties
-          chmod +x ./gradlew
+          #chmod +x ./gradlew
           dos2unix ./gradlew
           chmod 0755 ./gradlew
           ./gradlew assembleRelease
