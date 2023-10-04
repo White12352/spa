@@ -102,12 +102,11 @@ jobs:
           name: SFA
           path: ${{ github.workspace }}/SFA/app/build/outputs/apk/
 
-      - name: Release
-        uses: svenstaro/upload-release-action@v2
+      - name: Upload Prerelease
+        uses: softprops/action-gh-release@v1
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          release_name: ${{ env.RELEASE_NAME }}
           tag: ${{ env.TAG_NAME }}
-          body: ${{ env.RELEASE_NAME }}
-          file: |
-           ${{ github.workspace }}/SFA/app/build/outputs/apk/*.apk
+          tag_name: ${{ env.RELEASE_NAME }}
+          files: ${{ github.workspace }}/SFA/app/build/outputs/apk/*.apk
+          prerelease: true
+          generate_release_notes: true
