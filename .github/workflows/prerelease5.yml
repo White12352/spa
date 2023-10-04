@@ -27,6 +27,11 @@ jobs:
       - name: Checkout Source Code
         run: |
           git clone -b dev-next-yaott https://github.com/CHIZI-0618/sing-box code
+          cd code
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          git revert b728ba5
+          cd ..
           mv ${{ github.workspace }}/code/* ${{ github.workspace }} && rm -rf ${{ github.workspace }}/code
           git clone -b build https://github.com/yaotthaha/sing-box-for-android SFA
 
@@ -44,9 +49,6 @@ jobs:
           ALIAS_PASS: ${{ secrets.ALIAS_PASS }}
         run: |
           mkdir -p SFA/app/libs/
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
-          git revert b728ba5
           make lib_install
           version=$(CGO_ENABLED=0 go run ./cmd/internal/read_tag)
           CGO_ENABLED=1 gomobile bind -v -androidapi 21 -javapkg=io.nekohasekai -libname=box -tags ${TAGS} -ldflags "-X github.com/sagernet/sing-box/constant.Version=${version} -buildid=" ./experimental/libbox
