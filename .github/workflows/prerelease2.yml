@@ -55,7 +55,7 @@ jobs:
           cd sing-box
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
-          git reset -–hard d0c0315
+          git reset --hard d0c0315
           #git revert 57521fd
           git revert b728ba5
           git remote add sing-box https://github.com/SagerNet/sing-box
