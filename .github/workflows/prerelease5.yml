@@ -48,9 +48,9 @@ jobs:
           #git cherry-pick -x -n $(git log PuerNya/building --grep=keep-ssr --format=format:"%H")
           git cherry-pick -x -n $(git log PuerNya/building --grep=bittorrent --format=format:"%H")
           #git revert b728ba5
-          cd test
-          go mod tidy
-          cd ..
+          #cd test
+          #go mod tidy
+          #cd ..
           go mod tidy
           cd ..
           #mv ${{ github.workspace }}/code/* ${{ github.workspace }} && rm -rf ${{ github.workspace }}/code
