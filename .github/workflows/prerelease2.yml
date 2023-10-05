@@ -237,6 +237,7 @@ jobs:
           ls -la
           chmod +x *
           cp ../../.github/release.sh ./
+          export VERSION=${{ steps.version2.outputs.VERSION }}
           bash ./release.sh
           rm ./release.sh
           ls -la
@@ -453,6 +454,7 @@ jobs:
           ls -la
           chmod +x *
           cp ../../.github/release.sh ./
+          export VERSION=${{ steps.version2.outputs.VERSION }}
           bash ./release.sh
           rm ./release.sh
           ls -la
@@ -692,6 +694,7 @@ jobs:
           ls -la
           chmod +x *
           cp ../../.github/release.sh ./
+          export VERSION=${{ steps.version2.outputs.VERSION }}
           bash ./release.sh
           rm ./release.sh
           ls -la
