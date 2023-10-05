@@ -69,6 +69,7 @@ jobs:
           sed -i '0,/"github.com\/sagernet\/sing-box\/adapter"/s//&\n\t"github.com\/sagernet\/sing-box\/common\/proxyproto"/' inbound/default_tcp.go
           awk '{if (/return nil, E.New\("Proxy Protocol is deprecated and removed in sing-box 1.6.0"\)/ && !replaced) {print "\t\ta.logger.Debug(\"proxy protocol enabled\")\n\t\ttcpListener = &proxyproto.Listener{Listener: tcpListener, AcceptNoHeader: a.listenOptions.ProxyProtocolAcceptNoHeader}"; replaced = 1;} else {print}}' inbound/default_tcp.go > temp_file && mv -f temp_file inbound/default_tcp.go
           awk '{if (/if a.listenOptions.ProxyProtocol \|\| a.listenOptions.ProxyProtocolAcceptNoHeader \{/ && !replaced) {sub(/if a.listenOptions.ProxyProtocol \|\| a.listenOptions.ProxyProtocolAcceptNoHeader \{/, "if a.listenOptions.ProxyProtocol {", $0); replaced = 1;} print}' inbound/default_tcp.go > temp_file && mv -f temp_file inbound/default_tcp.go
+          sed -i '/github.com\/pierrec\/lz4\/v[0-999]\+ v[0-999]\+\.[0-999]\+\.[0-999]\+ \/\/ indirect/ a\\tgithub.com/pires/go-proxyproto v0.7.0 // indirect' test/go.mod
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
           #git reset --hard d0c0315
@@ -295,6 +296,7 @@ jobs:
           sed -i '0,/"github.com\/sagernet\/sing-box\/adapter"/s//&\n\t"github.com\/sagernet\/sing-box\/common\/proxyproto"/' inbound/default_tcp.go
           awk '{if (/return nil, E.New\("Proxy Protocol is deprecated and removed in sing-box 1.6.0"\)/ && !replaced) {print "\t\ta.logger.Debug(\"proxy protocol enabled\")\n\t\ttcpListener = &proxyproto.Listener{Listener: tcpListener, AcceptNoHeader: a.listenOptions.ProxyProtocolAcceptNoHeader}"; replaced = 1;} else {print}}' inbound/default_tcp.go > temp_file && mv -f temp_file inbound/default_tcp.go
           awk '{if (/if a.listenOptions.ProxyProtocol \|\| a.listenOptions.ProxyProtocolAcceptNoHeader \{/ && !replaced) {sub(/if a.listenOptions.ProxyProtocol \|\| a.listenOptions.ProxyProtocolAcceptNoHeader \{/, "if a.listenOptions.ProxyProtocol {", $0); replaced = 1;} print}' inbound/default_tcp.go > temp_file && mv -f temp_file inbound/default_tcp.go
+          sed -i '/github.com\/pierrec\/lz4\/v[0-999]\+ v[0-999]\+\.[0-999]\+\.[0-999]\+ \/\/ indirect/ a\\tgithub.com/pires/go-proxyproto v0.7.0 // indirect' test/go.mod
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
           #git reset --hard d0c0315
@@ -507,6 +509,7 @@ jobs:
           sed -i '0,/"github.com\/sagernet\/sing-box\/adapter"/s//&\n\t"github.com\/sagernet\/sing-box\/common\/proxyproto"/' inbound/default_tcp.go
           awk '{if (/return nil, E.New\("Proxy Protocol is deprecated and removed in sing-box 1.6.0"\)/ && !replaced) {print "\t\ta.logger.Debug(\"proxy protocol enabled\")\n\t\ttcpListener = &proxyproto.Listener{Listener: tcpListener, AcceptNoHeader: a.listenOptions.ProxyProtocolAcceptNoHeader}"; replaced = 1;} else {print}}' inbound/default_tcp.go > temp_file && mv -f temp_file inbound/default_tcp.go
           awk '{if (/if a.listenOptions.ProxyProtocol \|\| a.listenOptions.ProxyProtocolAcceptNoHeader \{/ && !replaced) {sub(/if a.listenOptions.ProxyProtocol \|\| a.listenOptions.ProxyProtocolAcceptNoHeader \{/, "if a.listenOptions.ProxyProtocol {", $0); replaced = 1;} print}' inbound/default_tcp.go > temp_file && mv -f temp_file inbound/default_tcp.go
+          sed -i '/github.com\/pierrec\/lz4\/v[0-999]\+ v[0-999]\+\.[0-999]\+\.[0-999]\+ \/\/ indirect/ a\\tgithub.com/pires/go-proxyproto v0.7.0 // indirect' test/go.mod
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
           #git reset --hard d0c0315
