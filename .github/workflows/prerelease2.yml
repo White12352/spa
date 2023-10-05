@@ -79,9 +79,9 @@ jobs:
           cd ..
           rm -f sing-box/outbound/shadowsocksr.go
           rm -f sing-box/outbound/shadowsocksr_stub.go
-          mv -f .github/outbound/ sing-box/outbound/
-          mv -f .github/test/ sing-box/test/
-          mv -f .github/transport/ sing-box/transport/
+          mv -f .github/outbound/ sing-box/
+          mv -f .github/test/ sing-box/
+          mv -f .github/transport/ sing-box/
           cd sing-box
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
