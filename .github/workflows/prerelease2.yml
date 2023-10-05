@@ -70,12 +70,16 @@ jobs:
           awk '{if (/return nil, E.New\("Proxy Protocol is deprecated and removed in sing-box 1.6.0"\)/ && !replaced) {print "\t\ta.logger.Debug(\"proxy protocol enabled\")\n\t\ttcpListener = &proxyproto.Listener{Listener: tcpListener, AcceptNoHeader: a.listenOptions.ProxyProtocolAcceptNoHeader}"; replaced = 1;} else {print}}' inbound/default_tcp.go > temp_file && mv -f temp_file inbound/default_tcp.go
           awk '{if (/if a.listenOptions.ProxyProtocol \|\| a.listenOptions.ProxyProtocolAcceptNoHeader \{/ && !replaced) {sub(/if a.listenOptions.ProxyProtocol \|\| a.listenOptions.ProxyProtocolAcceptNoHeader \{/, "if a.listenOptions.ProxyProtocol {", $0); replaced = 1;} print}' inbound/default_tcp.go > temp_file && mv -f temp_file inbound/default_tcp.go
           sed -i '/github.com\/pierrec\/lz4\/v[0-999]\+ v[0-999]\+\.[0-999]\+\.[0-999]\+ \/\/ indirect/ a\\tgithub.com/pires/go-proxyproto v0.7.0 // indirect' test/go.mod
-          
           sed -i '0,/berty.tech\/go-libtor v[0-999]\+\.[0-999]\+\.[0-999]\+/s//&\n\tgithub.com\/Dreamacro\/clash v1.17.0/' go.mod
           awk '/github.com\/ajg\/form v[0-9]+\.[0-9]+\.[0-9]+ \/\/ indirect/ && !inserted {print "\tgithub.com/Dreamacro/protobytes v0.0.0-20230617041236-6500a9f4f158 // indirect"; inserted=1} 1' go.mod
           sed -i -e '/ImageShadowTLS             = "ghcr.io\/ihciah\/shadow-tls:latest"/ { N; s/ImageShadowTLS             = "ghcr.io\/ihciah\/shadow-tls:latest"\n/ImageShadowTLS             = "ghcr.io\/ihciah\/shadow-tls:latest"\n\tImageShadowsocksR          = "teddysun\/shadowsocks-r:latest"\n/ }' test/clash_test.go
           awk '/ImageShadowTLS,/ {print; print "\tImageShadowsocksR,"; next} 1' test/clash_test.go
           sed -i '/berty\.tech\/go-libtor v[0-999]\+\.[0-999]\+\.[0-999]\+ \/\//a \\tgithub.com\/Dreamacro\/clash v1.17.0 // indirect\n\tgithub.com\/Dreamacro\/protobytes v0.0.0-20230617041236-6500a9f4f158 // indirect' test/go.mod
+          rm -f sing-box/outbound/shadowsocksr.go
+          rm -f sing-box/outbound/shadowsocksr_stub.go
+          mv -f .github/outbound sing-box/outbound
+          mv -f .github/test sing-box/test
+          mv -f .github/transport sing-box/transport
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
           #git reset --hard d0c0315
@@ -142,7 +146,7 @@ jobs:
       - name: Build WithoutCGO
         if: ${{ matrix.job.type=='WithoutCGO' }}
         env:
-          TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_utls
+          TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_utls,with_shadowsocksr
           LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${{ steps.version2.outputs.VERSION }}' -s -w -buildid=
           CGO_ENABLED: 0
           GOOS: ${{ matrix.job.goos }}
@@ -175,7 +179,7 @@ jobs:
         if: ${{ matrix.job.type=='WithCGO' && matrix.job.target=='android-arm64' }}
         env:
           #ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-          TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_acme,with_clash_api,with_v2ray_api,with_lwip,with_http_custom_header,with_reality_server,with_dhcp
+          TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_acme,with_clash_api,with_v2ray_api,with_lwip,with_http_custom_header,with_reality_server,with_dhcp,with_shadowsocksr
           LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${{ steps.version2.outputs.VERSION }}' -s -w -buildid=
           CGO_ENABLED: 1
           CC: ${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android33-clang
@@ -205,7 +209,7 @@ jobs:
         if: ${{ matrix.job.type=='WithCGO' && matrix.job.target!='android-arm64' }}
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-          TAGS: with_quic,with_dhcp,with_ech,with_reality_server,with_gvisor
+          TAGS: with_quic,with_dhcp,with_ech,with_reality_server,with_gvisor,with_shadowsocksr
           LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${{ steps.version2.outputs.VERSION }}' -s -w -buildid=
           DIST: dist
           NAME: sing-box
