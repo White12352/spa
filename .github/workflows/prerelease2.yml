@@ -53,18 +53,33 @@ jobs:
           #sed -i "s/v.TLSAllowInsecure/true/g" common/link/vmess.go
           git clone -b dev-next https://github.com/SagerNet/sing-box sing-box
           cd sing-box
+          svn co https://github.com/White12352/sing-box/branches/dev-next/common/proxyproto common/proxyproto
+          sed -i '0,/github.com\/oschwald\/maxminddb-golang v[0-9]\+\.[0-9]\+\.[0-9]\+/s//&\n\tgithub.com\/pires\/go-proxyproto v0.7.0/' go.mod
+          sed -i '0,/N "github.com\/sagernet\/sing\/common\/network"/s//&\n\n\t"github.com\/pires\/go-proxyproto"/' outbound/direct.go
+          sed -i '0,/overrideDestination M.Socksaddr/s//&\n\tproxyProto          uint8/' outbound/direct.go
+          sed -i '0,/dialer:         outboundDialer,/s//&\n\t\tproxyProto:     options.ProxyProtocol,/' outbound/direct.go
+          sed -i 's/if options.ProxyProtocol != 0 {/if options.ProxyProtocol > 2 {/1' outbound/direct.go
+          sed -i 's/return nil, E.New("Proxy Protocol is deprecated and removed in sing-box 1.6.0")/return nil, E.New("invalid proxy protocol option: ", options.ProxyProtocol)/1' outbound/direct.go
+          #sed -i '0,/ctx, metadata := adapter.AppendContext(ctx)/s//&\n\toriginDestination := metadata.Destination/1' outbound/direct.go
+          sed -i $'s#return h.dialer.DialContext(ctx, network, destination)#conn, err := h.dialer.DialContext(ctx, network, destination)\\n\\tif err != nil {\\n\\t\\treturn nil, err\\n\\t}\\n\\tif h.proxyProto > 0 {\\n\\t\\tsource := metadata.Source\\n\\t\\tif !source.IsValid() {\\n\\t\\t\\tsource = M.SocksaddrFromNet(conn.LocalAddr())\\n\\t\\t}\\n\\t\\tif originDestination.Addr.Is6() {\\n\\t\\t\\tsource = M.SocksaddrFrom(netip.AddrFrom16(source.Addr.As16()), source.Port)\\n\\t\\t}\\n\\t\\theader := proxyproto.HeaderProxyFromAddrs(h.proxyProto, source.TCPAddr(), originDestination.TCPAddr())\\n\\t\\t_, err = header.WriteTo(conn)\\n\\t\\tif err != nil {\\n\\t\\t\\tconn.Close()\\n\\t\\t\\treturn nil, E.Cause(err, "write proxy protocol header")\\n\\t\\t}\\n\\t}\\n\\treturn conn, nil#1' outbound/direct.go
+          #sed -i 's/ctx, metadata := adapter.AppendContext(ctx)/ctx, metadata := adapter.AppendContext(ctx)\n\toriginDestination := metadata.Destination/2' outbound/direct.go
+          awk '/ctx, metadata := adapter\.AppendContext\(ctx\)/ && count < 2 { sub(/ctx, metadata := adapter\.AppendContext\(ctx\)/, "&\n\toriginDestination := metadata.Destination"); count++; } 1' outbound/direct.go > temp_file && mv -f temp_file outbound/direct.go
+          sed -i $'s#return N.DialParallel(ctx, h.dialer, network, destination, destinationAddresses, domainStrategy == dns.DomainStrategyPreferIPv6, h.fallbackDelay)#conn, err := N.DialParallel(ctx, h.dialer, network, destination, destinationAddresses, domainStrategy == dns.DomainStrategyPreferIPv6, h.fallbackDelay)\\n\\tif err != nil {\\n\\t\\treturn nil, err\\n\\t}\\n\\tif h.proxyProto > 0 {\\n\\t\\tsource := metadata.Source\\n\\t\\tif !source.IsValid() {\\n\\t\\t\\tsource = M.SocksaddrFromNet(conn.LocalAddr())\\n\\t\\t}\\n\\t\\tif originDestination.Addr.Is6() {\\n\\t\\t\\tsource = M.SocksaddrFrom(netip.AddrFrom16(source.Addr.As16()), source.Port)\\n\\t\\t}\\n\\t\\theader := proxyproto.HeaderProxyFromAddrs(h.proxyProto, source.TCPAddr(), originDestination.TCPAddr())\\n\\t\\t_, err = header.WriteTo(conn)\\n\\t\\tif err != nil {\\n\\t\\t\\tconn.Close()\\n\\t\\t\\treturn nil, E.Cause(err, "write proxy protocol header")\\n\\t\\t}\\n\\t}\\n\\treturn conn, nil#1' outbound/direct.go
+          sed -i '0,/"github.com\/sagernet\/sing-box\/adapter"/s//&\n\t"github.com\/sagernet\/sing-box\/common\/proxyproto"/' inbound/default_tcp.go
+          awk '{if (/return nil, E.New\("Proxy Protocol is deprecated and removed in sing-box 1.6.0"\)/ && !replaced) {print "\t\ta.logger.Debug(\"proxy protocol enabled\")\n\t\ttcpListener = &proxyproto.Listener{Listener: tcpListener, AcceptNoHeader: a.listenOptions.ProxyProtocolAcceptNoHeader}"; replaced = 1;} else {print}}' inbound/default_tcp.go > temp_file && mv -f temp_file inbound/default_tcp.go
+          awk '{if (/if a.listenOptions.ProxyProtocol \|\| a.listenOptions.ProxyProtocolAcceptNoHeader \{/ && !replaced) {sub(/if a.listenOptions.ProxyProtocol \|\| a.listenOptions.ProxyProtocolAcceptNoHeader \{/, "if a.listenOptions.ProxyProtocol {", $0); replaced = 1;} print}' inbound/default_tcp.go > temp_file && mv -f temp_file inbound/default_tcp.go
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
           #git reset --hard d0c0315
           #git revert 57521fd
           #git revert b728ba5
-          git remote add sing-box https://github.com/White12352/sing-box
-          git fetch sing-box dev-next
-          git cherry-pick -x -n d18b973
-          git cherry-pick -x -n 4be2727
-          git cherry-pick -x -n 8825a52
-          git cherry-pick -x -n 4232b20
-          git cherry-pick -x -n c472e13
+          #git remote add sing-box https://github.com/White12352/sing-box
+          #git fetch sing-box dev-next
+          #git cherry-pick -x -n d18b973
+          #git cherry-pick -x -n 4be2727
+          #git cherry-pick -x -n 8825a52
+          #git cherry-pick -x -n 4232b20
+          #git cherry-pick -x -n c472e13
           git remote add PuerNya https://github.com/PuerNya/sing-box && git fetch PuerNya sniff-bittorrent
           git cherry-pick -x -n $(git log PuerNya/sniff-bittorrent --grep=bittorrent --format=format:"%H")
           go mod tidy
