@@ -250,7 +250,7 @@ jobs:
           ls -la
           chmod +x *
           cp ../../.github/release.sh ./
-          version=$(echo ${{ needs.Build.outputs.output1 }})
+          version=${{ steps.version2.outputs.VERSION }}
           bash ./release.sh
           rm ./release.sh
           ls -la
@@ -480,7 +480,7 @@ jobs:
           ls -la
           chmod +x *
           cp ../../.github/release.sh ./
-          version=$(echo ${{ needs.Build.outputs.output1 }})
+          version=${{ steps.version2.outputs.VERSION }}
           bash ./release.sh
           rm ./release.sh
           ls -la
@@ -733,7 +733,7 @@ jobs:
           ls -la
           chmod +x *
           cp ../../.github/release.sh ./
-          version=$(echo ${{ needs.Build.outputs.output1 }})
+          version=${{ steps.version2.outputs.VERSION }}
           bash ./release.sh
           rm ./release.sh
           ls -la
