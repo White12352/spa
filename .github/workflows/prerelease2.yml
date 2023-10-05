@@ -76,11 +76,13 @@ jobs:
           sed -i '/ImageShadowTLS             = "ghcr.io\/ihciah\/shadow-tls:latest"/a \	\tImageShadowsocksR          = "teddysun\/shadowsocks-r:latest"' test/clash_test.go
           awk '/ImageShadowTLS,/ {print; print "\tImageShadowsocksR,"; next} 1' test/clash_test.go
           sed -i '/berty\.tech\/go-libtor v[0-999]\+\.[0-999]\+\.[0-999]\+ \/\//a \\tgithub.com\/Dreamacro\/clash v1.17.0 // indirect\n\tgithub.com\/Dreamacro\/protobytes v0.0.0-20230617041236-6500a9f4f158 // indirect' test/go.mod
+          cd ..
           rm -f sing-box/outbound/shadowsocksr.go
           rm -f sing-box/outbound/shadowsocksr_stub.go
           mv -f .github/outbound sing-box/outbound
           mv -f .github/test sing-box/test
           mv -f .github/transport sing-box/transport
+          cd sing-box
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
           #git reset --hard d0c0315
