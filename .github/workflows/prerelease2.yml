@@ -26,6 +26,7 @@ jobs:
 
     outputs:
       output1: ${{ steps.version2.outputs.VERSION }}
+      output2: ${{ steps.zip.outputs.TIME }}
     
     steps:
       - name: Check out code into the Go module directory
@@ -238,12 +239,14 @@ jobs:
       
       - name: Zip
         if: ${{  success() }}
+        id: zip
         run: |
           cd sing-box/dist
           ls -la
           chmod +x *
           cp ../../.github/release.sh ./
-          export VERSION=${{ steps.version2.outputs.VERSION }}-$(date +%Y%m%d%H)
+          export time=$(date +%Y%m%d%H) && echo ::set-output name=TIME::${time}
+          export VERSION=${{ steps.version2.outputs.VERSION }}-${time}
           bash ./release.sh
           rm ./release.sh
           ls -la
@@ -735,7 +738,7 @@ jobs:
           path: sing-box/dist/
 
       - name: Display structure of downloaded files
-        run: ls -R && echo "time=$(date +%Y%m%d%H)" >> $GITHUB_ENV && echo "version=$(echo ${{ needs.Build.outputs.output1 }} | cut -d'-' -f3)" >> $GITHUB_ENV
+        run: ls -R && echo "time=${{ needs.Build.outputs.output2 }}" >> $GITHUB_ENV && echo "version=$(echo ${{ needs.Build.outputs.output1 }} | rev | cut -d '-' -f 1 | rev)" >> $GITHUB_ENV
         working-directory: sing-box/dist
 
       - name: Delete current release assets
