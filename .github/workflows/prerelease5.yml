@@ -45,8 +45,8 @@ jobs:
           mv -f .github/transport/* code/transport/
           mv -f .github/common/sniff/* code/common/sniff/
           cd code
-          #git config --global user.email "you@example.com"
-          #git config --global user.name "Your Name"
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
           #git remote add PuerNya https://github.com/PuerNya/sing-box
           #git fetch PuerNya building
           #git cherry-pick -x -n $(git log PuerNya/building --grep=keep-ssr --format=format:"%H")
