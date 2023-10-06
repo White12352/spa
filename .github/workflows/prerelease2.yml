@@ -243,7 +243,7 @@ jobs:
           ls -la
           chmod +x *
           cp ../../.github/release.sh ./
-          export VERSION=${{ steps.version2.outputs.VERSION }}
+          export VERSION=${{ steps.version2.outputs.VERSION }}-$(date +%Y%m%d%H)
           bash ./release.sh
           rm ./release.sh
           ls -la
