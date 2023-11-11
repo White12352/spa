@@ -53,7 +53,7 @@ jobs:
           ##sed -i "s/outbound := range r.outbounds/outbound := range r.outbounds.All()/g" route/router.go
           #sed -i "s/v.TLSAllowInsecure/true/g" common/link/vmess.go
           git clone -b dev-next https://github.com/SagerNet/sing-box sing-box
-          git clone -b main https://github.com/sagernet/sing sing
+          git clone -b main https://github.com/SagerNet/sing sing
           mv -f .github/proxyproto/ sing-box/common/
           cd sing-box
           #svn co https://github.com/White12352/sing-box/branches/dev-next/common/proxyproto common/proxyproto
