@@ -82,6 +82,7 @@ jobs:
           awk '{ if (/sniffMetadata, err := sniff.PeekStream\(ctx, conn, buffer, time\.Duration\(metadata\.InboundOptions\.SniffTimeout\), sniff\.StreamDomainNameQuery, sniff\.TLSClientHello, sniff\.HTTPHost\)/) sub("sniff\\.HTTPHost", "sniff.HTTPHost, sniff.BittorrentTCPMessage") } { print }' route/router.go > temp && mv -f temp route/router.go
           sed -i 's/sniffMetadata, _ := sniff.PeekPacket(ctx, buffer.Bytes(), sniff.DomainNameQuery, sniff.QUICClientHello, sniff.STUNMessage)/sniffMetadata, _ := sniff.PeekPacket(ctx, buffer.Bytes(), sniff.DomainNameQuery, sniff.QUICClientHello, sniff.STUNMessage, sniff.BittorrentUDPMessage)/' route/router.go
           awk '{if(index($0, "//replace github.com/sagernet/sing") > 0) $0 = "replace github.com/sagernet/sing => ../sing"}1' go.mod > temp_file && mv -f temp_file go.mod
+          awk '/^replace/ && !found {print "replace github.com/sagernet/sing => ../../sing"; found=1} 1' test/go.mod > go.mod.tmp && mv -f go.mod.tmp test/go.mod
           cd ..
           rm -f sing-box/outbound/shadowsocksr.go
           rm -f sing-box/outbound/shadowsocksr_stub.go
