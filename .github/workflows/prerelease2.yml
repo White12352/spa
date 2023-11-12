@@ -293,6 +293,30 @@ jobs:
           sudo apt -y update
           sudo apt -y install curl git build-essential libssl-dev libevent-dev zlib1g-dev
       
+      - name: Set ENV
+        run: |
+          echo "REPO=${{ github.repository }}" >> $GITHUB_ENV
+          echo "ShortSHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Get latest go version
+        id: version
+        run: |
+          echo ::set-output name=go_version::$(curl -s https://raw.githubusercontent.com/actions/go-versions/main/versions-manifest.json | grep -oE '"version": "[0-9]{1}.[0-9]{1,}(.[0-9]{1,})?"' | head -1 | cut -d':' -f2 | sed 's/ //g; s/"//g')
+      
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ steps.version.outputs.go_version }}
+          check-latest: true
+
+      - name: Cache go module
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/go/pkg/mod
+          key: go-${{ hashFiles('**/go.sum') }}
+      
       - name: Add proxy providers
         run: |
           #git clone -b dev-next https://github.com/qjebbs/sing-box sing-box
@@ -336,6 +360,9 @@ jobs:
           awk '/ProtocolSTUN = "stun"/ {print; print "\tProtocolBittorrent = \"bittorrent\""; inserted=1; next} 1; END {if (!inserted) print "\tProtocolBittorrent = \"bittorrent\""}' constant/protocol.go > temp_file && mv -f temp_file constant/protocol.go
           awk '{ if (/sniffMetadata, err := sniff.PeekStream\(ctx, conn, buffer, time\.Duration\(metadata\.InboundOptions\.SniffTimeout\), sniff\.StreamDomainNameQuery, sniff\.TLSClientHello, sniff\.HTTPHost\)/) sub("sniff\\.HTTPHost", "sniff.HTTPHost, sniff.BittorrentTCPMessage") } { print }' route/router.go > temp && mv -f temp route/router.go
           sed -i 's/sniffMetadata, _ := sniff.PeekPacket(ctx, buffer.Bytes(), sniff.DomainNameQuery, sniff.QUICClientHello, sniff.STUNMessage)/sniffMetadata, _ := sniff.PeekPacket(ctx, buffer.Bytes(), sniff.DomainNameQuery, sniff.QUICClientHello, sniff.STUNMessage, sniff.BittorrentUDPMessage)/' route/router.go
+          version2=$(go get github.com/White12352/sing@dev 2>&1 | awk 'NR==1' | awk '/github\.com\/White12352\/sing/{print $NF}' | cut -d' ' -f2)
+          version=$(grep 'github.com/sagernet/sing v' go.mod | awk '{print $NF}'); replacement="replace github.com/sagernet/sing $(echo $version) => github.com/White12352/sing $(echo $version2)"; awk -v replacement="$replacement" 'match($0, /\/\/replace github\.com\/sagernet\/sing/) {print replacement; next} 1' go.mod > go.mod.tmp && mv -f go.mod.tmp go.mod
+          version=$(grep 'github.com/sagernet/sing v' test/go.mod | awk '{print $NF}'); replacement="replace github.com/sagernet/sing $(echo $version) => github.com/White12352/sing $(echo $version2)"; awk -v replacement="$replacement" '/^replace/ && !found {print replacement; found=1} 1' test/go.mod > go.mod.tmp && mv -f go.mod.tmp test/go.mo
           cd ..
           rm -f sing-box/outbound/shadowsocksr.go
           rm -f sing-box/outbound/shadowsocksr_stub.go
@@ -370,30 +397,6 @@ jobs:
           #git remote add Adlyq https://github.com/Adlyq/sing-box && git fetch Adlyq
           #git cherry-pick $(git log Adlyq/dev-next --grep="custom header" --format=format:"%H") -x -n
           cd ..
-      
-      - name: Set ENV
-        run: |
-          echo "REPO=${{ github.repository }}" >> $GITHUB_ENV
-          echo "ShortSHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
-        shell: bash
-
-      - name: Get latest go version
-        id: version
-        run: |
-          echo ::set-output name=go_version::$(curl -s https://raw.githubusercontent.com/actions/go-versions/main/versions-manifest.json | grep -oE '"version": "[0-9]{1}.[0-9]{1,}(.[0-9]{1,})?"' | head -1 | cut -d':' -f2 | sed 's/ //g; s/"//g')
-      
-      - name: Setup Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: ${{ steps.version.outputs.go_version }}
-          check-latest: true
-
-      - name: Cache go module
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/go/pkg/mod
-          key: go-${{ hashFiles('**/go.sum') }}
       
       - name: Test
         if: ${{ github.ref_name=='debug' && matrix.job.id=='1' && matrix.job.type=='WithoutCGO' }}
@@ -529,6 +532,30 @@ jobs:
           sudo apt -y update
           sudo apt -y install curl git build-essential libssl-dev libevent-dev zlib1g-dev gcc-mingw-w64
       
+      - name: Set ENV
+        run: |
+          echo "REPO=${{ github.repository }}" >> $GITHUB_ENV
+          echo "ShortSHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Get latest go version
+        id: version
+        run: |
+          echo ::set-output name=go_version::$(curl -s https://raw.githubusercontent.com/actions/go-versions/main/versions-manifest.json | grep -oE '"version": "[0-9]{1}.[0-9]{1,}(.[0-9]{1,})?"' | head -1 | cut -d':' -f2 | sed 's/ //g; s/"//g')
+      
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ steps.version.outputs.go_version }}
+          check-latest: true
+
+      - name: Cache go module
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/go/pkg/mod
+          key: go-${{ hashFiles('**/go.sum') }}
+      
       - name: Add proxy providers
         run: |
           #git clone -b dev-next https://github.com/qjebbs/sing-box sing-box
@@ -572,6 +599,9 @@ jobs:
           awk '/ProtocolSTUN = "stun"/ {print; print "\tProtocolBittorrent = \"bittorrent\""; inserted=1; next} 1; END {if (!inserted) print "\tProtocolBittorrent = \"bittorrent\""}' constant/protocol.go > temp_file && mv -f temp_file constant/protocol.go
           awk '{ if (/sniffMetadata, err := sniff.PeekStream\(ctx, conn, buffer, time\.Duration\(metadata\.InboundOptions\.SniffTimeout\), sniff\.StreamDomainNameQuery, sniff\.TLSClientHello, sniff\.HTTPHost\)/) sub("sniff\\.HTTPHost", "sniff.HTTPHost, sniff.BittorrentTCPMessage") } { print }' route/router.go > temp && mv -f temp route/router.go
           sed -i 's/sniffMetadata, _ := sniff.PeekPacket(ctx, buffer.Bytes(), sniff.DomainNameQuery, sniff.QUICClientHello, sniff.STUNMessage)/sniffMetadata, _ := sniff.PeekPacket(ctx, buffer.Bytes(), sniff.DomainNameQuery, sniff.QUICClientHello, sniff.STUNMessage, sniff.BittorrentUDPMessage)/' route/router.go
+          version2=$(go get github.com/White12352/sing@dev 2>&1 | awk 'NR==1' | awk '/github\.com\/White12352\/sing/{print $NF}' | cut -d' ' -f2)
+          version=$(grep 'github.com/sagernet/sing v' go.mod | awk '{print $NF}'); replacement="replace github.com/sagernet/sing $(echo $version) => github.com/White12352/sing $(echo $version2)"; awk -v replacement="$replacement" 'match($0, /\/\/replace github\.com\/sagernet\/sing/) {print replacement; next} 1' go.mod > go.mod.tmp && mv -f go.mod.tmp go.mod
+          version=$(grep 'github.com/sagernet/sing v' test/go.mod | awk '{print $NF}'); replacement="replace github.com/sagernet/sing $(echo $version) => github.com/White12352/sing $(echo $version2)"; awk -v replacement="$replacement" '/^replace/ && !found {print replacement; found=1} 1' test/go.mod > go.mod.tmp && mv -f go.mod.tmp test/go.mo
           cd ..
           rm -f sing-box/outbound/shadowsocksr.go
           rm -f sing-box/outbound/shadowsocksr_stub.go
@@ -606,30 +636,6 @@ jobs:
           #git remote add Adlyq https://github.com/Adlyq/sing-box && git fetch Adlyq
           #git cherry-pick $(git log Adlyq/dev-next --grep="custom header" --format=format:"%H") -x -n
           cd ..
-      
-      - name: Set ENV
-        run: |
-          echo "REPO=${{ github.repository }}" >> $GITHUB_ENV
-          echo "ShortSHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
-        shell: bash
-
-      - name: Get latest go version
-        id: version
-        run: |
-          echo ::set-output name=go_version::$(curl -s https://raw.githubusercontent.com/actions/go-versions/main/versions-manifest.json | grep -oE '"version": "[0-9]{1}.[0-9]{1,}(.[0-9]{1,})?"' | head -1 | cut -d':' -f2 | sed 's/ //g; s/"//g')
-      
-      - name: Setup Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: ${{ steps.version.outputs.go_version }}
-          check-latest: true
-
-      - name: Cache go module
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/go/pkg/mod
-          key: go-${{ hashFiles('**/go.sum') }}
       
       - name: Test
         if: ${{ github.ref_name=='debug' && matrix.job.id=='1' && matrix.job.type=='WithoutCGO' }}
