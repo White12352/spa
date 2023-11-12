@@ -309,13 +309,6 @@ jobs:
         with:
           go-version: ${{ steps.version.outputs.go_version }}
           check-latest: true
-
-      - name: Cache go module
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/go/pkg/mod
-          key: go-${{ hashFiles('**/go.sum') }}
       
       - name: Add proxy providers
         run: |
@@ -548,13 +541,6 @@ jobs:
         with:
           go-version: ${{ steps.version.outputs.go_version }}
           check-latest: true
-
-      - name: Cache go module
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/go/pkg/mod
-          key: go-${{ hashFiles('**/go.sum') }}
       
       - name: Add proxy providers
         run: |
