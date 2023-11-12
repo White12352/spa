@@ -70,7 +70,7 @@ jobs:
           ##sed -i "s/outbound := range r.outbounds/outbound := range r.outbounds.All()/g" route/router.go
           #sed -i "s/v.TLSAllowInsecure/true/g" common/link/vmess.go
           git clone -b dev-next https://github.com/SagerNet/sing-box sing-box
-          #git clone -b dev https://github.com/White12352/sing sing
+          git clone -b dev https://github.com/White12352/sing sing
           mv -f .github/proxyproto/ sing-box/common/
           cd sing-box
           #svn co https://github.com/White12352/sing-box/branches/dev-next/common/proxyproto common/proxyproto
@@ -98,9 +98,8 @@ jobs:
           awk '/ProtocolSTUN = "stun"/ {print; print "\tProtocolBittorrent = \"bittorrent\""; inserted=1; next} 1; END {if (!inserted) print "\tProtocolBittorrent = \"bittorrent\""}' constant/protocol.go > temp_file && mv -f temp_file constant/protocol.go
           awk '{ if (/sniffMetadata, err := sniff.PeekStream\(ctx, conn, buffer, time\.Duration\(metadata\.InboundOptions\.SniffTimeout\), sniff\.StreamDomainNameQuery, sniff\.TLSClientHello, sniff\.HTTPHost\)/) sub("sniff\\.HTTPHost", "sniff.HTTPHost, sniff.BittorrentTCPMessage") } { print }' route/router.go > temp && mv -f temp route/router.go
           sed -i 's/sniffMetadata, _ := sniff.PeekPacket(ctx, buffer.Bytes(), sniff.DomainNameQuery, sniff.QUICClientHello, sniff.STUNMessage)/sniffMetadata, _ := sniff.PeekPacket(ctx, buffer.Bytes(), sniff.DomainNameQuery, sniff.QUICClientHello, sniff.STUNMessage, sniff.BittorrentUDPMessage)/' route/router.go
-          version2=$(go get github.com/White12352/sing@dev 2>&1 | awk 'NR==1' | awk '/github\.com\/White12352\/sing/{print $NF}' | cut -d' ' -f2)
-          version=$(grep 'github.com/sagernet/sing v' go.mod | awk '{print $NF}'); replacement="replace github.com/sagernet/sing $(echo $version) => github.com/White12352/sing $(echo $version2)"; awk -v replacement="$replacement" 'match($0, /\/\/replace github\.com\/sagernet\/sing/) {print replacement; next} 1' go.mod > go.mod.tmp && mv -f go.mod.tmp go.mod
-          version=$(grep 'github.com/sagernet/sing v' test/go.mod | awk '{print $NF}'); replacement="replace github.com/sagernet/sing $(echo $version) => github.com/White12352/sing $(echo $version2)"; awk -v replacement="$replacement" '/^replace/ && !found {print replacement; found=1} 1' test/go.mod > go.mod.tmp && mv -f go.mod.tmp test/go.mo
+          awk '{if(index($0, "//replace github.com/sagernet/sing") > 0) $0 = "replace github.com/sagernet/sing => ../sing"}1' go.mod > temp_file && mv -f temp_file go.mod
+          awk '/^replace/ && !found {print "replace github.com/sagernet/sing => ../../sing"; found=1} 1' test/go.mod > go.mod.tmp && mv -f go.mod.tmp test/go.mod
           cd ..
           rm -f sing-box/outbound/shadowsocksr.go
           rm -f sing-box/outbound/shadowsocksr_stub.go
