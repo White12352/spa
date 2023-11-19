@@ -74,6 +74,14 @@ jobs:
           distribution: 'oracle'
           java-version: 20
 
+      - name: Setup NDK
+        uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: r26b
+          add-to-path: false
+          local-cache: false
+      
       - name: Prepare
         run: |
           cd code
@@ -94,14 +102,6 @@ jobs:
           echo "VERSION_CODE: $VERSION_CODE"
           echo "RELEASE_NAME: $RELEASE_NAME"
           echo "TAG_NAME: $TAG_NAME"
-      
-      - name: Setup NDK
-        uses: nttld/setup-ndk@v1
-        id: setup-ndk
-        with:
-          ndk-version: r26b
-          add-to-path: false
-          local-cache: false
       
       - name: Build SFA
         env:
