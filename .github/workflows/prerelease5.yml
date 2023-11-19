@@ -115,7 +115,8 @@ jobs:
           #sed -i '24s|.*|        versionName getProps("VERSION_NAME")|' ${{ github.workspace }}/SFA/app/build.gradle
           #sed -i '30s|.*|            storeFile file(System.getenv("KEYSTORE_PATH"))|' ${{ github.workspace }}/SFA/app/build.gradle
           awk 'BEGIN {count=0} {while (count<5 && sub(/getProps/, "System.getenv")) count++; print}' ${{ github.workspace }}/SFA/app/build.gradle > temp_file && mv -f temp_file ${{ github.workspace }}/SFA/app/build.gradle
-          sed -i '0,/storeFile file("android.jks")/s/storeFile file("android.jks")/storeFile file(System.getenv("KEYSTORE_PATH"))/1' ${{ github.workspace }}/SFA/app/build.gradle
+          #sed -i '0,/storeFile file("android.jks")/s/storeFile file("android.jks")/storeFile file(System.getenv("KEYSTORE_PATH"))/1' ${{ github.workspace }}/SFA/app/build.gradle
+          sed -i '0,/storeFile file("release.keystore")/s/storeFile file("release.keystore")/storeFile file(System.getenv("KEYSTORE_PATH"))/1' ${{ github.workspace }}/SFA/app/build.gradle
           #sed -i '/fun updateGroups(groups: List<OutboundGroup>) {}/a\        fun clearLog() {}' ${{ github.workspace }}/SFA/app/src/main/java/io/nekohasekai/sfa/utils/CommandClient.kt
           #sed -i '0,/handler.updateGroups(groups)/s/handler.updateGroups(groups)/handler.updateGroups(groups)\n        }\n\n        override fun clearLog() {\n           handler.clearLog()/1' ${{ github.workspace }}/SFA/app/src/main/java/io/nekohasekai/sfa/utils/CommandClient.kt
           #chmod +x ./gradlew
