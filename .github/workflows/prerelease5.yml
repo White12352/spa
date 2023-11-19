@@ -60,11 +60,12 @@ jobs:
           go mod tidy
           cd ..
           #mv ${{ github.workspace }}/code/* ${{ github.workspace }} && rm -rf ${{ github.workspace }}/code
-          git clone -b build https://github.com/yaotthaha/sing-box-for-android SFA
+          #git clone -b build https://github.com/yaotthaha/sing-box-for-android SFA
+          git clone -b main https://github.com/SagerNet/sing-box-for-android SFA
           cd SFA
-          git remote add snsfa https://github.com/SagerNet/sing-box-for-android
-          git fetch snsfa main
-          git merge snsfa/main
+          #git remote add snsfa https://github.com/SagerNet/sing-box-for-android
+          #git fetch snsfa main
+          #git merge snsfa/main
           cd ..
 
       - name: Setup Java
@@ -113,6 +114,7 @@ jobs:
           #sed -i '23s|.*|        versionCode getProps("VERSION_CODE").toInteger()|' ${{ github.workspace }}/SFA/app/build.gradle
           #sed -i '24s|.*|        versionName getProps("VERSION_NAME")|' ${{ github.workspace }}/SFA/app/build.gradle
           #sed -i '30s|.*|            storeFile file(System.getenv("KEYSTORE_PATH"))|' ${{ github.workspace }}/SFA/app/build.gradle
+          awk 'BEGIN {count=0} {while (count<5 && sub(/getProps/, "System.getenv")) count++; print}' ${{ github.workspace }}/SFA/app/build.gradle > temp_file && mv -f temp_file ${{ github.workspace }}/SFA/app/build.gradle
           sed -i '0,/storeFile file("android.jks")/s/storeFile file("android.jks")/storeFile file(System.getenv("KEYSTORE_PATH"))/1' ${{ github.workspace }}/SFA/app/build.gradle
           #sed -i '/fun updateGroups(groups: List<OutboundGroup>) {}/a\        fun clearLog() {}' ${{ github.workspace }}/SFA/app/src/main/java/io/nekohasekai/sfa/utils/CommandClient.kt
           #sed -i '0,/handler.updateGroups(groups)/s/handler.updateGroups(groups)/handler.updateGroups(groups)\n        }\n\n        override fun clearLog() {\n           handler.clearLog()/1' ${{ github.workspace }}/SFA/app/src/main/java/io/nekohasekai/sfa/utils/CommandClient.kt
