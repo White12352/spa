@@ -95,6 +95,14 @@ jobs:
           echo "RELEASE_NAME: $RELEASE_NAME"
           echo "TAG_NAME: $TAG_NAME"
       
+      - name: Setup NDK
+        uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: r26b
+          add-to-path: false
+          local-cache: false
+      
       - name: Build SFA
         env:
           KEYSTORE_PATH: "${{ github.workspace }}/.github/k.jks"
@@ -108,7 +116,8 @@ jobs:
           cd code
           make lib_install
           VERSION_NAME=${VERSION_NAME}
-          CGO_ENABLED=1 gomobile bind -v -androidapi 21 -javapkg=io.nekohasekai -libname=box -tags ${TAGS} -ldflags "-X github.com/sagernet/sing-box/constant.Version=${VERSION_NAME} -buildid=" ./experimental/libbox
+          CC=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android34-clang
+          CGO_ENABLED=1 CC=${CC} gomobile bind -v -androidapi 21 -javapkg=io.nekohasekai -libname=box -tags ${TAGS} -ldflags "-X github.com/sagernet/sing-box/constant.Version=${VERSION_NAME} -buildid=" ./experimental/libbox
           cp ./libbox.aar ${{ github.workspace }}/SFA/app/libs/
           cd ../SFA
           #sed -i '23s|.*|        versionCode getProps("VERSION_CODE").toInteger()|' ${{ github.workspace }}/SFA/app/build.gradle
