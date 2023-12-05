@@ -100,7 +100,7 @@ jobs:
           sed -i 's/sniffMetadata, _ := sniff.PeekPacket(ctx, buffer.Bytes(), sniff.DomainNameQuery, sniff.QUICClientHello, sniff.STUNMessage)/sniffMetadata, _ := sniff.PeekPacket(ctx, buffer.Bytes(), sniff.DomainNameQuery, sniff.QUICClientHello, sniff.STUNMessage, sniff.BittorrentUDPMessage)/' route/router.go
           version2=$(go get github.com/White12352/sing@dev 2>&1 | awk 'NR==1' | awk '/github\.com\/White12352\/sing/{print $NF}' | cut -d' ' -f2)
           version=$(grep 'github.com/sagernet/sing v' go.mod | awk '{print $NF}'); replacement="replace github.com/sagernet/sing $(echo $version) => github.com/White12352/sing $(echo $version2)"; awk -v replacement="$replacement" 'match($0, /\/\/replace github\.com\/sagernet\/sing/) {print replacement; next} 1' go.mod > go.mod.tmp && mv -f go.mod.tmp go.mod
-          version=$(grep 'github.com/sagernet/sing v' test/go.mod | awk '{print $NF}'); replacement="replace github.com/sagernet/sing $(echo $version) => github.com/White12352/sing $(echo $version2)"; awk -v replacement="$replacement" '/^replace/ && !found {print replacement; found=1} 1' test/go.mod > go.mod.tmp && mv -f go.mod.tmp test/go.mo
+          version=$(grep 'github.com/sagernet/sing v' test/go.mod | awk '{print $NF}'); replacement="replace github.com/sagernet/sing $(echo $version) => github.com/White12352/sing $(echo $version2)"; awk -v replacement="$replacement" '/^replace/ && !found {print replacement; found=1} 1' test/go.mod > go.mod.tmp && mv -f go.mod.tmp test/go.mod
           cd ..
           rm -f sing-box/outbound/shadowsocksr.go
           rm -f sing-box/outbound/shadowsocksr_stub.go
