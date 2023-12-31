@@ -46,7 +46,7 @@ jobs:
           mv -f .github/outbound/* code/outbound/
           mv -f .github/test/* code/test/
           mv -f .github/transport/* code/transport/
-          mv -f .github/common/sniff/* code/common/sniff/
+          #mv -f .github/common/sniff/* code/common/sniff/
           cd code
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
