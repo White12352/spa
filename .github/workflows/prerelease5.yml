@@ -123,6 +123,10 @@ jobs:
           CGO_ENABLED=1 CC=${CC} gomobile bind -v -androidapi 21 -javapkg=io.nekohasekai -libname=box -tags ${TAGS} -ldflags "-X github.com/sagernet/sing-box/constant.Version=${VERSION_NAME} -buildid=" ./experimental/libbox
           cp ./libbox.aar ${{ github.workspace }}/SFA/app/libs/
           cd ../SFA
+          echo "" >> gradle.properties
+          echo "org.gradle.jvmargs=-Xmx4096m -Dfile.encoding=UTF-8 -XX:+UseParallelGC" >> gradle.properties
+          echo "org.gradle.caching=true" >> gradle.properties
+          echo "org.gradle.parallel=true" >> gradle.properties
           #sed -i '23s|.*|        versionCode getProps("VERSION_CODE").toInteger()|' ${{ github.workspace }}/SFA/app/build.gradle
           #sed -i '24s|.*|        versionName getProps("VERSION_NAME")|' ${{ github.workspace }}/SFA/app/build.gradle
           #sed -i '30s|.*|            storeFile file(System.getenv("KEYSTORE_PATH"))|' ${{ github.workspace }}/SFA/app/build.gradle
@@ -133,9 +137,6 @@ jobs:
           #sed -i '0,/handler.updateGroups(groups)/s/handler.updateGroups(groups)/handler.updateGroups(groups)\n        }\n\n        override fun clearLog() {\n           handler.clearLog()/1' ${{ github.workspace }}/SFA/app/src/main/java/io/nekohasekai/sfa/utils/CommandClient.kt
           #chmod +x ./gradlew
           #dos2unix ./gradlew
-          echo "org.gradle.jvmargs=-Xmx4096m -Dfile.encoding=UTF-8 -XX:+UseParallelGC" >> gradle.properties
-          echo "org.gradle.caching=true" >> gradle.properties
-          echo "org.gradle.parallel=true" >> gradle.properties
           chmod 0755 ./gradlew
           ./gradlew assembleRelease
 
