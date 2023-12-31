@@ -133,6 +133,7 @@ jobs:
           #sed -i '0,/handler.updateGroups(groups)/s/handler.updateGroups(groups)/handler.updateGroups(groups)\n        }\n\n        override fun clearLog() {\n           handler.clearLog()/1' ${{ github.workspace }}/SFA/app/src/main/java/io/nekohasekai/sfa/utils/CommandClient.kt
           #chmod +x ./gradlew
           #dos2unix ./gradlew
+          echo "org.gradle.jvmargs=-Xmx4096m -Dfile.encoding=UTF-8 -XX:+UseParallelGC" >> gradle.properties
           chmod 0755 ./gradlew
           ./gradlew assembleRelease
 
