@@ -26,7 +26,7 @@ jobs:
 
       - name: Checkout Source Code
         run: |
-          git clone -b dev-next https://github.com/CHIZI-0618/sing-box code
+          git clone -b dev-next-PuerNya https://github.com/CHIZI-0618/sing-box code
           cd code
           sed -i '0,/berty.tech\/go-libtor v[0-999]\+\.[0-999]\+\.[0-999]\+/s//&\n\tgithub.com\/Dreamacro\/clash v1.17.0/' go.mod
           awk '/github.com\/ajg\/form v[0-9]+\.[0-9]+\.[0-9]+ \/\/ indirect/ && !inserted {print "\tgithub.com/Dreamacro/protobytes v0.0.0-20230617041236-6500a9f4f158 // indirect"; inserted=1} 1' go.mod > temp && mv -f temp go.mod
