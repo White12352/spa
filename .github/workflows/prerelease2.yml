@@ -200,7 +200,6 @@ jobs:
           TAGS: with_gvisor,with_quic,with_wireguard,with_grpc,with_ech,with_utls,with_acme,with_clash_api,with_v2ray_api,with_lwip,with_http_custom_header,with_reality_server,with_dhcp,with_shadowsocksr
           LDFLAGS: -X 'github.com/sagernet/sing-box/constant.Version=${{ steps.version2.outputs.VERSION }}' -s -w -buildid=
           CGO_ENABLED: 1
-          CC: ${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android33-clang
           GOARCH: arm64
           GOOS: android
           DIST: dist
@@ -209,6 +208,7 @@ jobs:
         run: |
           cd sing-box
           mkdir dist
+          CC=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android33-clang
           TAGS=${TAGS}
           LDFLAGS=${LDFLAGS}
           DIST=${DIST}
